@@ -7,7 +7,8 @@ context("cohens_d")
 df <- data.frame(movie_1 = c(9, 7, 8, 9, 8, 9, 9, 10, 9, 9),
                  movie_2 = c(9, 6, 7, 8, 7, 9, 8, 8, 8, 7))
 
-df_long <- tidyr::gather(df, key = "movie", value = "rating", movie_1, movie_2)
+df_long <- data.frame(movie = rep(names(df), each = 10),
+                      rating = c(df$movie_1, df$movie_2))
 
 test_that("Between group cohen's d", {
   expect_equal(round(cohens_d(df$movie_1, df$movie_2), 2), 1.13)
