@@ -50,6 +50,8 @@ t_apa <- function(x, es = "cohens_d", format = c("text", "markdown",
     df <- fmt_stat(df, equal_sign = FALSE)
   }
 
+  # Check if Hedge's g* or Glass' Delta were requested for one sample or paired
+  # t-test.
   if (es != "cohens_d" && (grepl("One Sample|Paired", x$method)))
   {
     warning(paste0("'", es, "' not available for ", x$method, ",",
