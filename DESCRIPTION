@@ -1,13 +1,14 @@
 Package: apa
 Type: Package
 Title: Format Outputs of Statistical Tests According to APA Guidelines
-Version: 0.0.0.9000
+Version: 0.1.0
 Authors@R: person("Daniel", "Gromer", email = "dgromer@mailbox.org", role = c("aut", "cre"))
 Description: Formatter functions in the apa package take the return value of a
-    test function, e.g. a call to chisq.test and return a string formatted
-    according to the APA guidelines.
-URL: https://github.com/dgromer/psymisc
-BugReports: https://github.com/dgromer/psymisc/issues
+    statistical test function, e.g. a call to chisq.test and return a string
+    formatted according to the guidelines of the APA (American Psychological
+    Association).
+URL: https://github.com/dgromer/apa
+BugReports: https://github.com/dgromer/apa/issues
 License: GPL (>= 3) + file LICENSE
 Depends:
     R (>= 3.1.0)
