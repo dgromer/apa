@@ -17,7 +17,7 @@ The `*_apa()` functions help you to format outputs of statistical tests accordin
 
 The functions take the return value of a test function as the first argument, e.g. a call to `chisq.test()` is passed to `chisq_apa()`, which returns a formatted string.
 
-The idea of such formatters was introduced in the [schoRsch package](https://cran.r-project.org/web/packages/schoRsch/). apa generalizes this idea by providing formatters for different output formats (text, Markdown, RMarkdown, HTML, LaTeX, docx and R's plotmath syntax).
+The idea of such formatters was introduced in the [schoRsch package](https://cran.r-project.org/package=schoRsch/). apa generalizes this idea by providing formatters for different output formats (text, Markdown, RMarkdown, HTML, LaTeX, docx and R's plotmath syntax).
 
 Currently supported tests are:
 
