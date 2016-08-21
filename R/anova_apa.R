@@ -50,6 +50,8 @@ anova_apa <- function(x, effect = NULL,
   es <- match.arg(es)
   format <- match.arg(format)
 
+  es <- switch(es, pes =, petasq = "petasq", ges =, getasq = "getasq")
+
   # Use a pseudo-S3 method dispatch, because `ezANOVA` returns a list without a
   # particular class
 
