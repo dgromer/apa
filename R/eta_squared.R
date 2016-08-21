@@ -36,10 +36,13 @@ petasq <- function(x, effect)
   }
 }
 
-#' @importFrom stats anova
+#' @importFrom magrittr %<>%
+#' @importFrom stringr str_trim
 petasq_aov <- function(x, effect)
 {
-  x <- anova(x)
+  x <- summary(x, intercept = TRUE)[[1]]
+
+  row.names(x) %<>% str_trim()
 
   if (!effect %in% row.names(x))
   {

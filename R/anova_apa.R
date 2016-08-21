@@ -1,6 +1,6 @@
 #' Report ANOVA in APA style
 #'
-#' @param x A call to \code{ez::ezANOVA} or \code{afex::afex_ez},
+#' @param x A call to \code{aov}, \code{ez::ezANOVA}, or \code{afex::afex_ez},
 #'   \code{afex::afex_car} or \code{afex::afex_4}
 #' @param effect Character string indicating the name of the effect to display.
 #'   If is \code{NULL}, all effects are reported (default).
@@ -55,7 +55,15 @@ anova_apa <- function(x, effect = NULL,
   # Use a pseudo-S3 method dispatch, because `ezANOVA` returns a list without a
   # particular class
 
-  if (inherits(x, "afex_aov"))
+  if (inherits(x, c("aov", "lm")))
+  {
+    anova_apa_aov(x, effect, es, format, info, print)
+  }
+  if (inherits(x, c("aovlist", "listof")))
+  {
+    anova_apa_aovlist(x, effect, sph_corr, es, format, info, print)
+  }
+  else if (inherits(x, "afex_aov"))
   {
     anova_apa_afex(x, effect, sph_corr, es, format, info, print)
   }
@@ -67,6 +75,106 @@ anova_apa <- function(x, effect = NULL,
   {
     stop("'x' must be a call to `ez::ezANOVA` or `afex::aov_*`")
   }
+}
+
+#' @importFrom dplyr data_frame
+#' @importFrom purrr map_chr
+#' @importFrom stringr str_trim
+anova_apa_aov <- function(x, effect, es, format, info, print)
+{
+  # Check for unsupported effect size for calls to `aov`
+  if (es %in% c("ges", "getasq"))
+  {
+    warning(paste("A call to `aov` does not support generalized eta-squared,",
+                  "using partial eta-squared instead."), call. = FALSE)
+
+    es <- "petasq"
+  }
+
+  info_msg <- ""
+
+  anova <- summary(x, intercept = TRUE)[[1]]
+
+  # Row number where residuals are stored
+  row_resid <- nrow(anova)
+
+  # Extract information from anova object
+  tbl <- data_frame(
+    effects = str_trim(row.names(anova)[-row_resid]),
+    statistic = map_chr(anova$`F value`[-row_resid], fmt_stat),
+    df_n = anova$Df[-row_resid], df_d = anova$Df[row_resid],
+    p = map_chr(anova$`Pr(>F)`[-row_resid], fmt_pval),
+    symb = map_chr(anova$`Pr(>F)`[-row_resid], p_to_symbol),
+    es = map_chr(effects, ~ fmt_es(do.call(es, list(x, .x)),
+                                   leading_zero = FALSE))
+  )
+
+  if (info && info_msg != "") message(info_msg)
+
+  anova_apa_print(tbl, effect, es, format, print)
+}
+
+#' @importFrom dplyr bind_rows
+#' @importFrom purrr flatten map
+anova_apa_aovlist <- function(x, effect, sph_corr, es, format, info, print)
+{
+  # Inform that calls to `aov` do not support sphericity correction
+  if (sph_corr != "none")
+  {
+    warning(paste("A call to `aov` does not support sphericity correction,",
+                  "continuing without correction of possible violated",
+                  "sphericity"), call. = FALSE)
+  }
+
+  # Check for unsupported effect size for calls to `aov`
+  if (es %in% c("ges", "getasq"))
+  {
+    warning(paste("A call to `aov` does not support generalized eta-squared,",
+                  "using partial eta-squared instead."), call. = FALSE)
+
+    es <- "petasq"
+  }
+
+  info_msg <- ""
+
+  # Calculate ANOVA tables for each stratum
+  anova <- flatten(summary(x))
+
+  # Extract information from list of ANOVA tables and store in single data frame
+  tbl <- bind_rows(map(anova, extract_stats_aovlist))
+
+  # Calculate effect sizes as extra step, because `extract_stats_aovlist` can't
+  # call effect size function on aovlist object ('x') as this is not forwarded.
+  tbl$es <- map_chr(tbl$effects, ~ fmt_es(do.call(es, list(x, .x)),
+                                          leading_zero = FALSE))
+
+  # TODO: order rows in tbl
+
+  if (info && info_msg != "") message(info_msg)
+
+  anova_apa_print(tbl, effect, es, format, print)
+}
+
+#' @importFrom dplyr data_frame
+#' @importFrom stringr str_trim
+extract_stats_aovlist <- function(x)
+{
+  # Return NULL if stratum contains residuals only
+  if (nrow(x) == 1)
+  {
+    return(NULL)
+  }
+
+  # Row number where residuals are stored
+  row_resid <- nrow(x)
+
+  data_frame(
+    effects = str_trim(row.names(x)[-row_resid]),
+    statistic = map_chr(x$`F value`[-row_resid], fmt_stat),
+    df_n = x$Df[-row_resid], df_d = x$Df[row_resid],
+    p = map_chr(x$`Pr(>F)`[-row_resid], fmt_pval),
+    symb = map_chr(x$`Pr(>F)`[-row_resid], p_to_symbol)
+  )
 }
 
 #' @importFrom dplyr data_frame

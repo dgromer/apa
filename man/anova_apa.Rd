@@ -10,7 +10,7 @@ anova_apa(x, effect = NULL, sph_corr = c("greenhouse-geisser", "gg",
   "plotmath"), info = FALSE, print = TRUE)
 }
 \arguments{
-\item{x}{A call to \code{ez::ezANOVA} or \code{afex::afex_ez},
+\item{x}{A call to \code{aov}, \code{ez::ezANOVA}, or \code{afex::afex_ez},
 \code{afex::afex_car} or \code{afex::afex_4}}
 
 \item{effect}{Character string indicating the name of the effect to display.
