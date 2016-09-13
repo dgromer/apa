@@ -19,7 +19,7 @@ Further miscellaneous functions:
 
 <sup>1</sup> [pandoc](http://pandoc.org/) is required for docx output and needs to be installed manually when not using RStudio (which ships pandoc).
 
-<sup>2</sup> Supports input from `ezANOVA()` from the [ez package](https://cran.r-project.org/package=ez) and `aov_ez()` / `aov_car()` / `aov_4()` from the [afex package](https://cran.r-project.org/package=afex).
+<sup>2</sup> Supports input from `aov()`, `ezANOVA()` from the [ez package](https://cran.r-project.org/package=ez) and `aov_ez()` / `aov_car()` / `aov_4()` from the [afex package](https://cran.r-project.org/package=afex).
 
 ## Installation
 

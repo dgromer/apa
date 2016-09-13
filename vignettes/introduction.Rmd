@@ -22,7 +22,7 @@ The idea of such formatters was introduced in the [schoRsch package](https://cra
 Currently supported tests are:
 
 -   t-test (`t.test` and `apa::t_test`)
--   ANOVA (`ez::ezANOVA`, `afex::aov_car`, `afex::aov_ez`, and `afex::aov_4`)
+-   ANOVA (`aov`, `ez::ezANOVA`, `afex::aov_car`, `afex::aov_ez`, and `afex::aov_4`)
 -   chi-squared test (`chisq.test`)
 -   test of a correlation (`cor.test`)
 

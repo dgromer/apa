@@ -83,7 +83,7 @@ anova_apa <- function(x, effect = NULL,
 anova_apa_aov <- function(x, effect, es, format, info, print)
 {
   # Check for unsupported effect size for calls to `aov`
-  if (es %in% c("ges", "getasq"))
+  if (es == "getasq")
   {
     warning(paste("A call to `aov` does not support generalized eta-squared,",
                   "using partial eta-squared instead."), call. = FALSE)
@@ -93,9 +93,10 @@ anova_apa_aov <- function(x, effect, es, format, info, print)
 
   info_msg <- ""
 
+  # Calculate ANOVA table
   anova <- summary(x, intercept = TRUE)[[1]]
 
-  # Row number where residuals are stored
+  # The row number where residuals are stored
   row_resid <- nrow(anova)
 
   # Extract information from anova object
@@ -127,7 +128,7 @@ anova_apa_aovlist <- function(x, effect, sph_corr, es, format, info, print)
   }
 
   # Check for unsupported effect size for calls to `aov`
-  if (es %in% c("ges", "getasq"))
+  if (es == "getasq")
   {
     warning(paste("A call to `aov` does not support generalized eta-squared,",
                   "using partial eta-squared instead."), call. = FALSE)
@@ -148,7 +149,8 @@ anova_apa_aovlist <- function(x, effect, sph_corr, es, format, info, print)
   tbl$es <- map_chr(tbl$effects, ~ fmt_es(do.call(es, list(x, .x)),
                                           leading_zero = FALSE))
 
-  # TODO: order rows in tbl
+  # Reorder rows in tbl
+  tbl <- reorder_anova_tbl(tbl)
 
   if (info && info_msg != "") message(info_msg)
 
@@ -165,7 +167,7 @@ extract_stats_aovlist <- function(x)
     return(NULL)
   }
 
-  # Row number where residuals are stored
+  # The row number where residuals are stored
   row_resid <- nrow(x)
 
   data_frame(
@@ -248,6 +250,9 @@ anova_apa_afex <- function(x, effect, sph_corr, es, format, info, print)
       )
     }
   }
+
+  # Reorder rows in tbl
+  tbl <- reorder_anova_tbl(tbl)
 
   if (info && info_msg != "") message(info_msg)
 
@@ -475,3 +480,29 @@ anova_apa_print_plotmath <- function(tbl, text, effect)
     "( [<=>] \\.[0-9]{3}, )", "( [<=] -?[0-9]*\\.[0-9]{2}$)"
   )
 }
+
+#' @importFrom magrittr %>%
+#' @importFrom purrr map map_dbl
+reorder_anova_tbl <- function(x)
+{
+  # Get names of all main effects
+  factors <- grep("[(:]", x$effects, value = TRUE, invert = TRUE)
+
+  # Function for creating names of interaction effects
+  concat_fctrs <- function(...) paste(..., collapse = ":")
+
+  new_order <-
+    seq_along(factors) %>%
+    # Create the new effects order (main effects, two-way interactions, ...)
+    map(~ combn(factors, .x, FUN = concat_fctrs, simplify = FALSE)) %>%
+    unlist() %>%
+    # Add regex for intercept line
+    { c("\\(Intercept\\)", .) } %>%
+    # Get row index for each effect in old ANOVA table
+    map_dbl(~ grep(paste0("^", .x, "$"), x$effects))
+
+
+  # Apply new order to 'x'
+  x[new_order, ]
+}
+
