@@ -37,4 +37,3 @@ cor_apa(cor.test(x, y, method = "spearman"))
 cor_apa(cor.test(x, y, method = "kendall"))
 
 }
-

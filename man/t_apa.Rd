@@ -36,4 +36,3 @@ t_apa(t_test(1:10, y = c(7:20)))
 t_apa(t_test(extra ~ group, sleep, paired = TRUE))
 
 }
-

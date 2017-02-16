@@ -62,4 +62,3 @@ object.
 \seealso{
 \link{t.test}
 }
-

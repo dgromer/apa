@@ -32,4 +32,3 @@ use the formatters in inline code in RMarkdown documents.
 \link{anova_apa}, \link{chisq_apa},
   \link{cor_apa}, \link{t_apa}
 }
-

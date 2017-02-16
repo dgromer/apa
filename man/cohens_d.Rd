@@ -2,8 +2,8 @@
 % Please edit documentation in R/cohens_d.R
 \name{cohens_d}
 \alias{cohens_d}
-\alias{cohens_d.data.frame}
 \alias{cohens_d.default}
+\alias{cohens_d.data.frame}
 \alias{cohens_d.formula}
 \alias{cohens_d.htest}
 \title{Cohen's d}
@@ -84,4 +84,3 @@ Lakens, D. (2013). Calculating and reporting effect sizes to
 facilitate cumulative science: a practical primer for t-tests and ANOVAs.
 \emph{Frontiers in Psychology}, 4, 863. doi:10.3389/fpsyg.2013.00863
 }
-

@@ -58,4 +58,3 @@ y <- aov_ez(id = "id", dv = "rt", data = md_12.1,
 anova_apa(y)
 
 }
-

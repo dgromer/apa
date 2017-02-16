@@ -182,6 +182,7 @@ extract_stats_aovlist <- function(x)
 #' @importFrom dplyr data_frame
 #' @importFrom magrittr %>% %<>%
 #' @importFrom purrr map map_chr
+#' @importFrom stringr str_extract
 anova_apa_afex <- function(x, effect, sph_corr, es, format, info, print)
 {
   info_msg <- ""
@@ -230,6 +231,21 @@ anova_apa_afex <- function(x, effect, sph_corr, es, format, info, print)
         s$pval.adjustments[mauchlys, paste0("Pr(>F[", corr_method, "])")] %>%
         map_chr(fmt_pval)
 
+      # Update significance asterisks
+      tbl$symb <-
+        tbl$p %>%
+        # P-values have already been formatted, so need to workaround that
+        map_chr(~ {
+          if (.x == "< .001")
+          {
+            "***"
+          }
+          else
+          {
+            .x %>% str_extract("[0-9.]+") %>% as.numeric() %>% p_to_symbol()
+          }
+        })
+
       # Add performed corrections to info message
       info_msg %<>% paste0(
         "Sphericity corrections:\n",
@@ -261,6 +277,7 @@ anova_apa_afex <- function(x, effect, sph_corr, es, format, info, print)
 
 #' @importFrom dplyr data_frame left_join
 #' @importFrom magrittr %>% %<>%
+#' @importFrom stringr str_extract
 anova_apa_ezanova <- function(x, effect, sph_corr, es, format, info, print)
 {
   info_msg <- ""
@@ -308,6 +325,21 @@ anova_apa_ezanova <- function(x, effect, sph_corr, es, format, info, print)
       tbl[match(mauchlys$Effect, tbl$effects), "p"] <-
         mauchlys[[paste0("p[", corr_method, "]")]] %>%
         map_chr(fmt_pval)
+
+      # Update significance asterisks
+      tbl$symb <-
+        tbl$p %>%
+        # P-values have already been formatted, so need to workaround that
+        map_chr(~ {
+          if (.x == "< .001")
+          {
+            "***"
+          }
+          else
+          {
+            .x %>% str_extract("[0-9.]+") %>% as.numeric() %>% p_to_symbol()
+          }
+        })
 
       # Add performed corrections to info message
       info_msg %<>% paste0(

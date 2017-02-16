@@ -52,4 +52,3 @@ Lakens, D. (2013). Calculating and reporting effect sizes to facilitate
   cumulative science: a practical primer for t-tests and ANOVAs.
   \emph{Frontiers in Psychology}, 4, 863. doi:10.3389/fpsyg.2013.00863
 }
-

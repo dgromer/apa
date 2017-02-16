@@ -16,4 +16,3 @@ the partial eta squared should be returned.}
 \description{
 Partial Eta Squared
 }
-

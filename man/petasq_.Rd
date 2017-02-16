@@ -17,4 +17,3 @@ squares.
 \deqn{\eta_p^2 = \frac{SS_effect}{SS_effect + SS_error}}{partial eta squared
 = SS_effect / (SS_effect + SS_error)}
 }
-
