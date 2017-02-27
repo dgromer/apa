@@ -73,7 +73,7 @@ anova_apa <- function(x, effect = NULL,
   }
   else
   {
-    stop("'x' must be a call to `ez::ezANOVA` or `afex::aov_*`")
+    stop("'x' must be a call to `aov`, `ez::ezANOVA`, or `afex::aov_*`")
   }
 }
 
