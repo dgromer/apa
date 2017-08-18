@@ -231,6 +231,13 @@ fmt_latex <- function(x)
     gsub("(, n)", ",~n", .)
 }
 
+# Format character strings for better tex printing (i.e. inline maths in Rmarkdown)
+#' @importFrom magrittr %>%
+#' @importFrom stringr str_replace_all
+fmt_tex <- function(x) {
+  paste0("$", x, "$") %>% str_replace_all('(, )([^[:digit:]])', '$, $\\2')
+}
+
 # Convert APA text to an expression in R's plotmath syntax
 #' @importFrom stringr str_trim
 fmt_plotmath <- function(text, ...)
