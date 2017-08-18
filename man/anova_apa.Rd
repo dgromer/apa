@@ -7,7 +7,7 @@
 anova_apa(x, effect = NULL, sph_corr = c("greenhouse-geisser", "gg",
   "huynh-feldt", "hf", "none"), es = c("petasq", "pes", "getasq", "ges"),
   format = c("text", "markdown", "rmarkdown", "html", "latex", "docx",
-  "plotmath"), info = FALSE, print = TRUE)
+  "plotmath", "tex"), info = FALSE, print = TRUE)
 }
 \arguments{
 \item{x}{A call to \code{aov}, \code{ez::ezANOVA}, or \code{afex::afex_ez},

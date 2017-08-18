@@ -4,12 +4,14 @@
 \alias{apa}
 \title{APA Formatting for RMarkdown Reports}
 \usage{
-apa(x, effect = NULL, format = "rmarkdown", print = FALSE, ...)
+apa(x, ...)
 }
 \arguments{
 \item{x}{An \R object. Must be a call to one of \code{afex::aov_4},
 \code{afex::aov_car}, \code{afex::aov_ez}, \code{chisq.test},
 \code{cor.test}, \code{ez::ezANOVA} or \code{t_test}.}
+
+\item{...}{Further arguments passed to other methods}
 
 \item{effect}{(only applicable if \code{x} is an ANOVA) Character string
 indicating the name of the effect to display. If is \code{NULL}, all
@@ -21,8 +23,6 @@ effects are reported (default).}
 
 \item{print}{Logical indicating whether to return the result as an \R object
 (\code{FALSE}) or print using \code{cat} (\code{TRUE}).}
-
-\item{...}{Further arguments passed to other methods}
 }
 \description{
 A wrapper around the \code{*_apa} functions, providing a convenient way to

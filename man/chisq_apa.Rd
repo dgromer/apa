@@ -5,7 +5,7 @@
 \title{Report Chi-squared test in APA style}
 \usage{
 chisq_apa(x, print_n = FALSE, format = c("text", "markdown", "rmarkdown",
-  "html", "latex", "docx", "plotmath"), info = FALSE, print = TRUE)
+  "html", "latex", "docx", "plotmath", "tex"), info = FALSE, print = TRUE)
 }
 \arguments{
 \item{x}{A call to \code{chisq.test}}
