@@ -19,10 +19,15 @@
 chisq_apa <- function(x, print_n = FALSE, format = c("text", "markdown",
                                                      "rmarkdown", "html",
                                                      "latex", "docx",
-                                                     "plotmath"),
+                                                     "plotmath", "tex"),
                       info = FALSE, print = TRUE)
 {
   format <- match.arg(format)
+
+  # if the argument tex was given, we wrap this function
+  if (format == "tex") {
+    return(fmt_tex(chisq_apa(x, print_n=print_n, format="text", info=info, print=print)))
+  }
 
   # Check if 'x' was a call to `chisq.test`
   if (!inherits(x, "htest") && !grepl("Chi-squared test", x$method))

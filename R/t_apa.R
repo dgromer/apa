@@ -22,10 +22,15 @@
 #' @export
 t_apa <- function(x, es = "cohens_d", format = c("text", "markdown",
                                                  "rmarkdown", "html", "latex",
-                                                 "docx", "plotmath"),
+                                                 "docx", "plotmath", "tex"),
                   info = FALSE, print = TRUE)
 {
   format <- match.arg(format)
+
+  # if the argument tex was given, we wrap this function
+  if (format == "tex") {
+    return(fmt_tex(t_apa(x, es=es, format="text", info=info, print=print)))
+  }
 
   # Check if 'x' was a call to `t_test` or `t.test`
   if (!inherits(x, "htest") && !grepl("t-test", x$method))

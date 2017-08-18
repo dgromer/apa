@@ -23,10 +23,15 @@
 #'
 #' @export
 cor_apa <- function(x, format = c("text", "markdown", "rmarkdown", "html",
-                                  "latex", "docx", "plotmath"),
+                                  "latex", "docx", "plotmath", "tex"),
                     info = FALSE, print = TRUE)
 {
   format <- match.arg(format)
+
+  # if the argument tex was given, we wrap this function
+  if (format == "tex") {
+    return(fmt_tex(cor_apa(x, format="text", info=info, print=print)))
+  }
 
   # Check if 'x' was a call to `cor.test`
   if (!inherits(x, "htest") && !grepl("correlation", x$method))

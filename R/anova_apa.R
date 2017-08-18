@@ -43,12 +43,22 @@ anova_apa <- function(x, effect = NULL,
                                    "hf", "none"),
                       es = c("petasq", "pes", "getasq", "ges"),
                       format = c("text", "markdown", "rmarkdown", "html",
-                                 "latex", "docx", "plotmath"),
+                                 "latex", "docx", "plotmath", "tex"),
                       info = FALSE, print = TRUE)
 {
   sph_corr <- match.arg(sph_corr)
   es <- match.arg(es)
   format <- match.arg(format)
+
+  # if the argument tex was given, we wrap this function
+  if (format == "tex") {
+    # the output of this function is a dataframe, so we need
+    # to edit the text accordingly
+    return(
+      dplyr::mutate(fmt_tex(anova_apa(x, sph_corr=sph_corr, es=es, format="text", info=info, print=print)),
+                    text=fmt_tex(text))
+      )
+  }
 
   es <- switch(es, pes =, petasq = "petasq", ges =, getasq = "getasq")
 
