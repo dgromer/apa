@@ -19,33 +19,39 @@
 #'   \link{cor_apa}, \link{t_apa}
 #'
 #' @export
-apa <- function(x, effect = NULL, format = "rmarkdown", print = FALSE, ...)
+apa <- function(x, ...){
+  UseMethod('apa', x)
+}
+
+# the method for htests
+apa.htest <- function(x, effect = NULL, format = "rmarkdown", print = FALSE, ...)
 {
-  if (inherits(x, "htest"))
-  {
-    if (grepl("Chi-squared test", x$method))
-    {
-      chisq_apa(x, format = format, print = print, ...)
-    }
-    else if (grepl("correlation", x$method))
-    {
-      cor_apa(x, format = format, print = print, ...)
-    }
-    else if (grepl("t-test", x$method))
-    {
-      t_apa(x, format = format, print = print, ...)
-    }
-    else
-    {
-      stop("Unkown type passed to 'x'")
-    }
+  if (grepl("Chi-squared test", x$method)) {
+    output <- chisq_apa(x, format = format, print = print, ...)
   }
-  else if (inherits(x, "afex_aov") || (is.list(x) && names(x)[1] == "ANOVA"))
-  {
-    anova_apa(x, effect, format = format, print = print, ...)
+  else if (grepl("correlation", x$method)) {
+    output <- cor_apa(x, format = format, print = print, ...)
   }
-  else
-  {
-    stop("Unkown type passed to 'x'")
+  else if (grepl("t-test", x$method)) {
+    output <- t_apa(x, format = format, print = print, ...)
   }
+  else {
+    stop("Unkown htest object passed to 'x'")
+  }
+
+  output
+}
+
+# the method for lists
+apa.list <- function(x, effect = NULL, format = "rmarkdown", print = FALSE, ...) {
+  if (inherits(x, "afex_aov") || (is.list(x) && names(x)[1] == "ANOVA")) {
+    output <- anova_apa(x, effect, format = format, print = print, ...)
+  } else {
+    stop("Unknown list object passed to 'x'")
+  }
+}
+
+# the method for bayesfactors
+apa.BFBayesFactor <- function(x, effect = NULL, format = "rmarkdown", print = FALSE, ...) {
+
 }
