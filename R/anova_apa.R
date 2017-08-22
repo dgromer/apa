@@ -416,7 +416,7 @@ anova_apa_print <- function(tbl, effect, es_name, format, print)
       }
       else
       {
-        cat(text[which(tbl$effect == effect)])
+        cat(text[which(tbl$effects == effect)])
       }
     }
     # Return as string(s)
