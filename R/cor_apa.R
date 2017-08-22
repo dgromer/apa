@@ -28,7 +28,7 @@ cor_apa <- function(x, format = c("text", "markdown", "rmarkdown", "html",
 {
   format <- match.arg(format)
 
-  # Check if 'x' was a call to `cor.test`
+  # Make sure that 'x' was a call to `cor.test`
   if (!inherits(x, "htest") && !grepl("correlation", x$method))
   {
     stop("'x' must be a call to `cor.test`")
@@ -53,6 +53,7 @@ cor_apa <- function(x, format = c("text", "markdown", "rmarkdown", "html",
                  if (coef == "pearson's") paste0("(", df, ") ") else " ",
                  estimate, ", ", fmt_symb("p", format), " ", p)
 
+  # Further formatting for LaTeX and plotmath
   if (format == "latex")
   {
     text <- fmt_latex(text)

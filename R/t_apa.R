@@ -27,7 +27,7 @@ t_apa <- function(x, es = "cohens_d", format = c("text", "markdown",
 {
   format <- match.arg(format)
 
-  # Check if 'x' was a call to `t_test` or `t.test`
+  # Make sure that 'x' was a call to `t_test` or `t.test`
   if (!inherits(x, "htest") && !grepl("t-test", x$method))
   {
     stop("'x' must be a call to `t_test` or `t.test`")
@@ -66,6 +66,7 @@ t_apa <- function(x, es = "cohens_d", format = c("text", "markdown",
                  fmt_symb("p", format), " ", p, ", ", fmt_symb(es, format), " ",
                  d)
 
+  # Further formatting for LaTeX and plotmath
   if (format == "latex")
   {
     text <- fmt_latex(text)

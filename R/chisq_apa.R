@@ -24,7 +24,7 @@ chisq_apa <- function(x, print_n = FALSE, format = c("text", "markdown",
 {
   format <- match.arg(format)
 
-  # Check if 'x' was a call to `chisq.test`
+  # Make sure that 'x' was a call to `chisq.test`
   if (!inherits(x, "htest") && !grepl("Chi-squared test", x$method))
   {
     stop("'x' must be a call to `chisq.test`")
@@ -47,6 +47,7 @@ chisq_apa <- function(x, print_n = FALSE, format = c("text", "markdown",
   text <- paste0(fmt_symb("chisq", format), "(", df, n, ") ", statistic, ", ",
                  fmt_symb("p", format), " ", p)
 
+  # Further formatting for LaTeX and plotmath
   if (format == "latex")
   {
     text <- fmt_latex(text)
