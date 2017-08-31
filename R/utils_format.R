@@ -118,6 +118,23 @@ fmt_symb <- function(x, format)
            "spearman's"  = "$r_s$",
            "t"           = "\\textit{t}")
   }
+  else if (format == "latex_math")
+  {
+    switch(x,
+           "chisq"       = "\\chi^2",
+           "cohens_d"    = "d",
+           "F"           = "F",
+           "getasq"      = "\\eta^2_g",
+           "glass_delta" = "\\Delta",
+           "hedges_g"    = "g",
+           "kendall's"   = "r_\\tau",
+           "p"           = "p",
+           "pearson's"   = "r",
+           "petasq"      = "\\eta^2_p",
+           "r"           = "r",
+           "spearman's"  = "r_s",
+           "t"           = "t")
+  }
   else if (format == "markdown")
   {
     switch(x,
@@ -229,6 +246,22 @@ fmt_latex <- function(x)
     gsub("(\\([0-9]+.*,) ([0-9]+.*\\))", "\\1~\\2", .) %>%
     # Non-breaking spaces if n is displayed in chi^2 parantheses
     gsub("(, n)", ",~n", .)
+}
+
+# Format character strings for better LaTeX math mode printing
+#' @importFrom magrittr %>%
+#' @importFrom purrr as_vector map
+#' @importFrom stringr str_split
+fmt_latex_math <- function(text)
+{
+  text %>%
+    # Split string at commas (but not if comma is in parenthesis, e.g. F(1, 50))
+    str_split(", (?![^(]*\\))") %>%
+    as_vector() %>%
+    # Put each piece in a math environment
+    map_chr(~ paste0("$", .x, "$")) %>%
+    # Add commas again
+    paste(collapse = ", ")
 }
 
 # Convert APA text to an expression in R's plotmath syntax

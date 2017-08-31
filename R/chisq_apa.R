@@ -4,7 +4,7 @@
 #' @param print_n Logical indicating whether to show sample size in text
 #' @param format Character string specifying the output format. One of
 #'   \code{"text"}, \code{"markdown"}, \code{"rmarkdown"}, \code{html},
-#'   \code{"latex"}, \code{"docx"} or \code{"plotmath"}.
+#'   \code{"latex"}, \code{"latex_math"}, \code{"docx"} or \code{"plotmath"}.
 #' @param info Logical indicating whether to print a message on the used test
 #'   (default is \code{FALSE})
 #' @param print Logical indicating wheter to print the formatted output via
@@ -18,8 +18,8 @@
 #' @export
 chisq_apa <- function(x, print_n = FALSE, format = c("text", "markdown",
                                                      "rmarkdown", "html",
-                                                     "latex", "docx",
-                                                     "plotmath"),
+                                                     "latex", "latex_math",
+                                                     "docx", "plotmath"),
                       info = FALSE, print = TRUE)
 {
   format <- match.arg(format)
@@ -51,6 +51,10 @@ chisq_apa <- function(x, print_n = FALSE, format = c("text", "markdown",
   if (format == "latex")
   {
     text <- fmt_latex(text)
+  }
+  else if (format == "latex_math")
+  {
+    text <- fmt_latex_math(text)
   }
   else if (format == "plotmath")
   {

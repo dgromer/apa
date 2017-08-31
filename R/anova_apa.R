@@ -15,7 +15,7 @@
 #'   or \code{"ges"}).
 #' @param format Character string specifying the output format. One of
 #'   \code{"text"}, \code{"markdown"}, \code{"rmarkdown"}, \code{html},
-#'   \code{"latex"}, \code{"docx"} or \code{"plotmath"}.
+#'   \code{"latex"}, \code{"latex_math"}, \code{"docx"} or \code{"plotmath"}.
 #' @param info Logical indicating whether to print a message on the used test
 #'   (default is \code{FALSE})
 #' @param print Logical indicating wheter to print the formatted output via
@@ -43,7 +43,7 @@ anova_apa <- function(x, effect = NULL,
                                    "hf", "none"),
                       es = c("petasq", "pes", "getasq", "ges"),
                       format = c("text", "markdown", "rmarkdown", "html",
-                                 "latex", "docx", "plotmath"),
+                                 "latex", "latex_math", "docx", "plotmath"),
                       info = FALSE, print = TRUE)
 {
   sph_corr <- match.arg(sph_corr)
@@ -388,13 +388,17 @@ anova_apa_print <- function(tbl, effect, es_name, format, print)
                    tbl$statistic, ", ", fmt_symb("p", format), " ", tbl$p, ", ",
                    fmt_symb(es_name, format), " ", tbl$es)
 
-    if (format == "plotmath")
-    {
-      return(anova_apa_print_plotmath(tbl, text, effect))
-    }
-    else if (format == "latex")
+    if (format == "latex")
     {
       text <- map_chr(text, fmt_latex)
+    }
+    else if (format == "latex_math")
+    {
+      text <- map_chr(text, fmt_latex_math)
+    }
+    else if (format == "plotmath")
+    {
+      return(anova_apa_print_plotmath(tbl, text, effect))
     }
 
     # cat to console
