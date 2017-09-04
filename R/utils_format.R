@@ -237,9 +237,9 @@ p_to_symbol <- function(p)
 # Format character strings for better LaTeX printing (i.e. insert non-breaking
 # spaces at appropriate positions)
 #' @importFrom magrittr %>%
-fmt_latex <- function(x)
+fmt_latex <- function(text)
 {
-  x %>%
+  text %>%
     # Non-breaking spaces around equal sign, smaller than and greater than
     gsub(" ([<=>]) ", "~\\1~", .) %>%
     # Non-breaking space between degrees of freedom in F-value
@@ -250,7 +250,7 @@ fmt_latex <- function(x)
 
 # Format character strings for better LaTeX math mode printing
 #' @importFrom magrittr %>%
-#' @importFrom purrr as_vector map
+#' @importFrom purrr as_vector map_chr
 #' @importFrom stringr str_split
 fmt_latex_math <- function(text)
 {

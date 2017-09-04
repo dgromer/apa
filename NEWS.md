@@ -2,7 +2,7 @@
 
 ## New features
 
-* Add LaTeX math output format
+* Add LaTeX math output format (#3)
 
 ## Bug fixes and minor improvements
 
