@@ -6,7 +6,8 @@
 
 ## Bug fixes and minor improvements
 
-* Fix error in `anova_apa` when specifying the `effect` argument 
+* Fix error in `anova_apa` when specifying the `effect` argument
+* Fix printing of p-values if p = 1.
 
 # apa 0.2.0
 
