@@ -31,7 +31,7 @@ fmt_pval <- function(p, equal_sign = TRUE)
   {
     "< .001"
   }
-  else if (p == 1)
+  else if (isTRUE(all.equal(p, 1)))
   {
     "> .999"
   }
