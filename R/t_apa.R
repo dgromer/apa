@@ -7,7 +7,7 @@
 #'   samples or one sample t-test (cohen's d is reported for these test).
 #' @param format Character string specifying the output format. One of
 #'   \code{"text"}, \code{"markdown"}, \code{"rmarkdown"}, \code{html},
-#'   \code{"latex"}, \code{"docx"} or \code{"plotmath"}.
+#'   \code{"latex"}, \code{"latex_math"}, \code{"docx"} or \code{"plotmath"}.
 #' @param info Logical indicating whether to print a message on the used test
 #'   (default is \code{FALSE})
 #' @param print Logical indicating wheter to print the formatted output via
@@ -22,12 +22,13 @@
 #' @export
 t_apa <- function(x, es = "cohens_d", format = c("text", "markdown",
                                                  "rmarkdown", "html", "latex",
-                                                 "docx", "plotmath"),
+                                                 "latex_math", "docx",
+                                                 "plotmath"),
                   info = FALSE, print = TRUE)
 {
   format <- match.arg(format)
 
-  # Check if 'x' was a call to `t_test` or `t.test`
+  # Make sure that 'x' was a call to `t_test` or `t.test`
   if (!inherits(x, "htest") && !grepl("t-test", x$method))
   {
     stop("'x' must be a call to `t_test` or `t.test`")
@@ -66,9 +67,14 @@ t_apa <- function(x, es = "cohens_d", format = c("text", "markdown",
                  fmt_symb("p", format), " ", p, ", ", fmt_symb(es, format), " ",
                  d)
 
+  # Further formatting for LaTeX and plotmath
   if (format == "latex")
   {
     text <- fmt_latex(text)
+  }
+  else if (format == "latex_math")
+  {
+    text <- fmt_latex_math(text)
   }
   else if (format == "plotmath")
   {

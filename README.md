@@ -2,7 +2,7 @@
 
 apa's functions format output of statistical tests according to guidelines of the APA (American Psychological Association), ready to copy-and-paste into manuscripts.
 
-The idea of such formatters was introduced in the [schoRsch package](https://cran.r-project.org/package=schoRsch/). apa generalizes this idea by providing formatters for different output formats (text, Markdown, RMarkdown, HTML, LaTeX, docx and R's plotmath syntax).
+The idea of such formatters was introduced in the [schoRsch package](https://cran.r-project.org/package=schoRsch/). apa generalizes this idea by providing formatters for different output formats (text, Markdown, RMarkdown, HTML, LaTeX, LaTeX inline math, docx and R's plotmath syntax).
 
 Currently available formatters are:
 

@@ -1,4 +1,14 @@
-# apa 0.1.0.9000
+# apa 0.2.0.9000
+
+## New features
+
+* Add LaTeX math output format (#3)
+
+## Bug fixes and minor improvements
+
+* Fix error in `anova_apa` when specifying the `effect` argument 
+
+# apa 0.2.0
 
 ## New features
 

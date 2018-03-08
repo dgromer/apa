@@ -45,7 +45,8 @@ Calling `cor_apa()` then returns a string ready to copy-and-paste into manuscrip
 cor_apa(ct)
 ```
 
-The `format` argument of `cor_apa()` allows you to specify the output format, which can be one of `"text"` (default), `"markdown"`, `"rmarkdown"`, `"html"`, `"latex"`, `"docx"` or `"plotmath"`.
+The `format` argument of `cor_apa()` allows you to specify the output format, which can be one of `"text"` (default), `"markdown"`, `"rmarkdown"`, `"html"`, `"latex"`, `"latex_math"`, `"docx"` or `"plotmath"`.
+
 
 ```{r}
 cor_apa(ct, format = "rmarkdown")

@@ -4,7 +4,7 @@
 #' @param print_n Logical indicating whether to show sample size in text
 #' @param format Character string specifying the output format. One of
 #'   \code{"text"}, \code{"markdown"}, \code{"rmarkdown"}, \code{html},
-#'   \code{"latex"}, \code{"docx"} or \code{"plotmath"}.
+#'   \code{"latex"}, \code{"latex_math"}, \code{"docx"} or \code{"plotmath"}.
 #' @param info Logical indicating whether to print a message on the used test
 #'   (default is \code{FALSE})
 #' @param print Logical indicating wheter to print the formatted output via
@@ -18,13 +18,13 @@
 #' @export
 chisq_apa <- function(x, print_n = FALSE, format = c("text", "markdown",
                                                      "rmarkdown", "html",
-                                                     "latex", "docx",
-                                                     "plotmath"),
+                                                     "latex", "latex_math",
+                                                     "docx", "plotmath"),
                       info = FALSE, print = TRUE)
 {
   format <- match.arg(format)
 
-  # Check if 'x' was a call to `chisq.test`
+  # Make sure that 'x' was a call to `chisq.test`
   if (!inherits(x, "htest") && !grepl("Chi-squared test", x$method))
   {
     stop("'x' must be a call to `chisq.test`")
@@ -47,9 +47,14 @@ chisq_apa <- function(x, print_n = FALSE, format = c("text", "markdown",
   text <- paste0(fmt_symb("chisq", format), "(", df, n, ") ", statistic, ", ",
                  fmt_symb("p", format), " ", p)
 
+  # Further formatting for LaTeX and plotmath
   if (format == "latex")
   {
     text <- fmt_latex(text)
+  }
+  else if (format == "latex_math")
+  {
+    text <- fmt_latex_math(text)
   }
   else if (format == "plotmath")
   {
