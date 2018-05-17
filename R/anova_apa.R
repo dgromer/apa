@@ -59,7 +59,7 @@ anova_apa <- function(x, effect = NULL,
   {
     anova_apa_aov(x, effect, es, format, info, print)
   }
-  if (inherits(x, c("aovlist", "listof")))
+  else if (inherits(x, c("aovlist", "listof")))
   {
     anova_apa_aovlist(x, effect, sph_corr, es, format, info, print)
   }

@@ -8,6 +8,7 @@
 
 * Fix error in `anova_apa` when specifying the `effect` argument
 * Fix printing of p-values if p = 1.
+* Add missing `else` in `anova_apa`. (@stegmannks, #6)
 
 # apa 0.2.0
 
