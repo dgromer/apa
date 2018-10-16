@@ -9,6 +9,8 @@
 * Fix error in `anova_apa` when specifying the `effect` argument
 * Fix printing of p-values if p = 1.
 * Add missing `else` in `anova_apa`. (@stegmannks, #6)
+* Fix error in calculation of sample size from degrees of freedom in Cohen's d
+  for dependent samples (@lcreteig, #7)
 
 # apa 0.2.0
 

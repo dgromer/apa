@@ -159,7 +159,7 @@ cohens_d.htest <- function(ttest, corr = c("none", "hedges_g", "glass_delta"),
     # t-test for two dependent samples
     if (grepl("Paired", ttest$method))
     {
-      cohens_d_(t = unname(ttest$statistic), n = unname(ttest$parameter + 2),
+      cohens_d_(t = unname(ttest$statistic), n = unname(ttest$parameter + 1),
                 paired = TRUE)
     }
     # t-test for one sample
