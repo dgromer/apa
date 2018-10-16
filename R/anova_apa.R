@@ -541,4 +541,3 @@ reorder_anova_tbl <- function(x)
   # Apply new order to 'x'
   x[new_order, ]
 }
-

@@ -1,7 +1,7 @@
 ## Test environments
-* local Ubuntu 16.10 install, R 3.3.2
-* local Windows 10 Professional 64-bit install, R 3.3.2
-* win-builder (r-devel)
+* local Windows 10 Professional 64-bit install, R 3.5.1
+* local Ubuntu 18.04 64-bit install, R 3.5.1
+* rhub::check_with_rdevel()
 
 ## R CMD check results
 There were no ERRORs, WARNINGs or NOTEs. 
