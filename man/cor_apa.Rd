@@ -17,7 +17,7 @@ cor_apa(x, format = c("text", "markdown", "rmarkdown", "html", "latex",
 \item{info}{Logical indicating whether to print a message on the used test
 (default is \code{FALSE})}
 
-\item{print}{Logical indicating wheter to print the formatted output via
+\item{print}{Logical indicating whether to print the formatted output via
 \code{cat} (\code{TRUE}, default) or return as character string.}
 }
 \description{

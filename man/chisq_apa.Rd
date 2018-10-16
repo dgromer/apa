@@ -4,9 +4,9 @@
 \alias{chisq_apa}
 \title{Report Chi-squared test in APA style}
 \usage{
-chisq_apa(x, print_n = FALSE, format = c("text", "markdown", "rmarkdown",
-  "html", "latex", "latex_math", "docx", "plotmath"), info = FALSE,
-  print = TRUE)
+chisq_apa(x, print_n = FALSE, format = c("text", "markdown",
+  "rmarkdown", "html", "latex", "latex_math", "docx", "plotmath"),
+  info = FALSE, print = TRUE)
 }
 \arguments{
 \item{x}{A call to \code{chisq.test}}
@@ -20,7 +20,7 @@ chisq_apa(x, print_n = FALSE, format = c("text", "markdown", "rmarkdown",
 \item{info}{Logical indicating whether to print a message on the used test
 (default is \code{FALSE})}
 
-\item{print}{Logical indicating wheter to print the formatted output via
+\item{print}{Logical indicating whether to print the formatted output via
 \code{cat} (\code{TRUE}, default) or return as character string.}
 }
 \description{

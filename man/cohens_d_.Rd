@@ -4,9 +4,9 @@
 \alias{cohens_d_}
 \title{Cohen's d}
 \usage{
-cohens_d_(m1 = NULL, m2 = NULL, sd1 = NULL, sd2 = NULL, n1 = NULL,
-  n2 = NULL, t = NULL, n = NULL, paired = FALSE, corr = c("none",
-  "hedges_g", "glass_delta"))
+cohens_d_(m1 = NULL, m2 = NULL, sd1 = NULL, sd2 = NULL,
+  n1 = NULL, n2 = NULL, t = NULL, n = NULL, paired = FALSE,
+  corr = c("none", "hedges_g", "glass_delta"))
 }
 \arguments{
 \item{m1}{Numeric, mean of the first group}

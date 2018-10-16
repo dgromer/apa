@@ -7,7 +7,7 @@
 #'   \code{"latex"}, \code{"latex_math"}, \code{"docx"} or \code{"plotmath"}.
 #' @param info Logical indicating whether to print a message on the used test
 #'   (default is \code{FALSE})
-#' @param print Logical indicating wheter to print the formatted output via
+#' @param print Logical indicating whether to print the formatted output via
 #'   \code{cat} (\code{TRUE}, default) or return as character string.
 #' @examples
 #' # Example data from ?chisq.test
