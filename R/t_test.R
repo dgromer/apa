@@ -59,7 +59,7 @@ t_test.formula <- function(formula, data, subset, na.action, ...)
 {
   t <- t.test(formula = formula, data = data, ...)
 
-  mf <- na.omit(model.frame(formula, data))
+  mf <- na.omit(model.frame(formula, data, drop.unused.levels = TRUE))
   t$data <- setNames(split(mf[[1]], mf[[2]]), c("x", "y"))
 
   t

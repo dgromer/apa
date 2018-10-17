@@ -1,3 +1,9 @@
+# apa 0.3.0.9000
+
+## Bug fixes
+
+* Fix a bug in `t_test` when the independent variable has unused factor levels.
+
 # apa 0.3.0
 
 ## New features
