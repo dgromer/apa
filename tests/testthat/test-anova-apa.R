@@ -13,6 +13,7 @@ test_that("Formal structure for anova_apa output", {
     filter(error == 0) %>%
     group_by(subnum, group, cue, flank) %>%
     summarise(rt = mean(rt)) %>%
+    filter(!is.nan(rt)) %>% # delete empty groups (fix for change in dplyr 0.8)
     as.data.frame # ezANOVA does not support tbl_df
 
   anova <- anova_apa(
