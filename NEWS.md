@@ -1,3 +1,10 @@
+# apa 0.3.2
+
+## Bug fixes
+
+* Fix a test that returned a wrong result in r-devel (t-test now returns a list
+  with more elements).
+
 # apa 0.3.1
 
 ## Bug fixes

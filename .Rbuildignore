@@ -1,3 +1,5 @@
+^paper$
+^CRAN-RELEASE$
 ^.*\.Rproj$
 ^\.Rproj\.user$
 ^cran-comments\.md$
