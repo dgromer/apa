@@ -1,3 +1,7 @@
+## Information
+Fix compatibility with r-devel as t.test() now also returns the standard error
+(in list component stderr).
+
 ## Test environments
 * local Windows 10 Professional 64-bit install, R 3.5.1
 * devtools::check_win_devel()
