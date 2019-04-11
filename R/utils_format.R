@@ -104,7 +104,7 @@ fmt_symb <- function(x, format)
   else if (format == "latex")
   {
     switch(x,
-           "chisq"       = "$chi^2$",
+           "chisq"       = "$\\chi^2$",
            "cohens_d"    = "\\textit{d}",
            "F"           = "\\textit{F}",
            "getasq"      = "$\\eta^2_g$",

@@ -1,3 +1,9 @@
+# apa 0.3.2.9000
+
+## Bug fixes
+
+* Add missing backslash for chi-square in LaTeX format.
+
 # apa 0.3.2
 
 ## Bug fixes
