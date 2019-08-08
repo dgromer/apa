@@ -3,6 +3,7 @@
 ## Bug fixes
 
 * Add missing backslash for chi-square in LaTeX format.
+* Fix error in one sample `cohens_d` if input is from `t_test`.
 
 # apa 0.3.2
 

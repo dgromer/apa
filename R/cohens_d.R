@@ -145,7 +145,8 @@ cohens_d.htest <- function(ttest, corr = c("none", "hedges_g", "glass_delta"),
     # t-test for one sample
     else if (grepl("One Sample", ttest$method))
     {
-      cohens_d(ttest$data$x)
+      cohens_d_(t = unname(ttest$statistic), n = unname(ttest$parameter + 1),
+                paired = TRUE)
     }
     # t-test for two independent samples
     else
