@@ -532,8 +532,13 @@ reorder_anova_tbl <- function(x)
     # Create the new effects order (main effects, two-way interactions, ...)
     map(~ combn(factors, .x, FUN = concat_fctrs, simplify = FALSE)) %>%
     unlist() %>%
-    # Add regex for intercept line
-    { c("\\(Intercept\\)", .) } %>%
+    # Add regex for intercept line (if intercept is present in 'x')
+    {
+      if (any(grepl("(Intercept)", x$effects)))
+        c("\\(Intercept\\)", .)
+      else
+        .
+    } %>%
     # Get row index for each effect in old ANOVA table
     map_dbl(~ grep(paste0("^", .x, "$"), x$effects))
 
