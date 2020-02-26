@@ -40,7 +40,7 @@ test_that("chisq_apa: html format", {
 
 test_that("chisq_apa: latex format", {
   expect_identical(chisq_apa(chisq.test(m), format = "latex", print = FALSE),
-                   "$chi^2$(2)~=~242.30, \\textit{p}~<~.001")
+                   "$\\chi^2$(2)~=~242.30, \\textit{p}~<~.001")
 })
 
 test_that("chisq_apa: plotmath format", {
