@@ -77,7 +77,7 @@ anova_apa <- function(x, effect = NULL,
   }
 }
 
-#' @importFrom dplyr data_frame
+#' @importFrom tibble tibble
 #' @importFrom purrr map_chr
 #' @importFrom stringr str_trim
 anova_apa_aov <- function(x, effect, es, format, info, print)
@@ -100,7 +100,7 @@ anova_apa_aov <- function(x, effect, es, format, info, print)
   row_resid <- nrow(anova)
 
   # Extract information from anova object
-  tbl <- data_frame(
+  tbl <- tibble(
     effects = str_trim(row.names(anova)[-row_resid]),
     statistic = map_chr(anova$`F value`[-row_resid], fmt_stat),
     df_n = anova$Df[-row_resid], df_d = anova$Df[row_resid],
@@ -157,7 +157,7 @@ anova_apa_aovlist <- function(x, effect, sph_corr, es, format, info, print)
   anova_apa_print(tbl, effect, es, format, print)
 }
 
-#' @importFrom dplyr data_frame
+#' @importFrom tibble tibble
 #' @importFrom stringr str_trim
 extract_stats_aovlist <- function(x)
 {
@@ -170,7 +170,7 @@ extract_stats_aovlist <- function(x)
   # The row number where residuals are stored
   row_resid <- nrow(x)
 
-  data_frame(
+  tibble(
     effects = str_trim(row.names(x)[-row_resid]),
     statistic = map_chr(x$`F value`[-row_resid], fmt_stat),
     df_n = x$Df[-row_resid], df_d = x$Df[row_resid],
@@ -179,7 +179,7 @@ extract_stats_aovlist <- function(x)
   )
 }
 
-#' @importFrom dplyr data_frame
+#' @importFrom tibble tibble
 #' @importFrom magrittr %>% %<>%
 #' @importFrom purrr map map_chr
 #' @importFrom stringr str_extract
@@ -192,7 +192,7 @@ anova_apa_afex <- function(x, effect, sph_corr, es, format, info, print)
   anova <- anova(x, intercept = TRUE, correction = "none")
 
   # Extract information from anova object
-  tbl <- data_frame(
+  tbl <- tibble(
     effects = row.names(anova),
     statistic = map_chr(anova$F, fmt_stat),
     df_n = anova$`num Df`, df_d = anova$`den Df`,
@@ -275,9 +275,10 @@ anova_apa_afex <- function(x, effect, sph_corr, es, format, info, print)
   anova_apa_print(tbl, effect, es, format, print)
 }
 
-#' @importFrom dplyr data_frame left_join
+#' @importFrom dplyr left_join
 #' @importFrom magrittr %>% %<>%
 #' @importFrom stringr str_extract
+#' @importFrom tibble tibble
 anova_apa_ezanova <- function(x, effect, sph_corr, es, format, info, print)
 {
   info_msg <- ""
@@ -290,7 +291,7 @@ anova_apa_ezanova <- function(x, effect, sph_corr, es, format, info, print)
   }
 
   # Extract information from anova object
-  tbl <- data_frame(
+  tbl <- tibble(
     effects = anova$Effect,
     statistic = map_chr(anova$F, fmt_stat),
     df_n = anova$DFn, df_d = anova$DFd, p = map_chr(anova$p, fmt_pval),
@@ -366,10 +367,10 @@ anova_apa_ezanova <- function(x, effect, sph_corr, es, format, info, print)
   anova_apa_print(tbl, effect, es, format, print)
 }
 
-#' @importFrom dplyr data_frame
 #' @importFrom magrittr %>% %<>%
 #' @importFrom purrr map_chr
 #' @importFrom rmarkdown render
+#' @importFrom tibble tibble
 anova_apa_print <- function(tbl, effect, es_name, format, print)
 {
   # Output for default parameters
@@ -428,7 +429,7 @@ anova_apa_print <- function(tbl, effect, es_name, format, print)
     {
       if (is.null(effect))
       {
-        data_frame(effect = tbl$effects, text = text)
+        tibble(effect = tbl$effects, text = text)
       }
       else
       {
@@ -438,6 +439,7 @@ anova_apa_print <- function(tbl, effect, es_name, format, print)
   }
 }
 
+#' @importFrom tibble tibble
 anova_apa_print_default <- function(tbl, effect, es_name)
 {
   # Split test statistic and its sign, because the tabular output will be
@@ -445,7 +447,7 @@ anova_apa_print_default <- function(tbl, effect, es_name)
   sign <- substr(tbl$statistic, 1, 1)
   statistic <- substr(tbl$statistic, 2, nchar(tbl$statistic))
 
-  tbl <- data_frame(
+  tbl <- tibble(
     Effect = tbl$effects,
     ` ` = paste0("F(", tbl$df_n, ", ", tbl$df_d, ") ", sign,
                  format(statistic, width = max(nchar(statistic)),

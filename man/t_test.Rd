@@ -8,9 +8,16 @@
 \usage{
 t_test(x, ...)
 
-\method{t_test}{default}(x, y = NULL, alternative = c("two.sided",
-  "less", "greater"), mu = 0, paired = FALSE, var.equal = FALSE,
-  conf.level = 0.95, ...)
+\method{t_test}{default}(
+  x,
+  y = NULL,
+  alternative = c("two.sided", "less", "greater"),
+  mu = 0,
+  paired = FALSE,
+  var.equal = FALSE,
+  conf.level = 0.95,
+  ...
+)
 
 \method{t_test}{formula}(formula, data, subset, na.action, ...)
 }
@@ -44,7 +51,7 @@ t_test(x, ...)
     with two levels giving the corresponding groups.}
 
 \item{data}{an optional matrix or data frame (or similar: see
-    \code{\link{model.frame}}) containing the variables in the
+    \code{\link[stats]{model.frame}}) containing the variables in the
     formula \code{formula}.  By default the variables are taken from
     \code{environment(formula)}.}
 

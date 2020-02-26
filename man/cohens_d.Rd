@@ -10,17 +10,35 @@
 \usage{
 cohens_d(...)
 
-\method{cohens_d}{default}(x, y = NULL, paired = FALSE,
-  corr = c("none", "hedges_g", "glass_delta"), na.rm = FALSE, ...)
+\method{cohens_d}{default}(
+  x,
+  y = NULL,
+  paired = FALSE,
+  corr = c("none", "hedges_g", "glass_delta"),
+  na.rm = FALSE,
+  ...
+)
 
-\method{cohens_d}{data.frame}(data, dv, iv, paired = FALSE,
-  corr = c("none", "hedges_g", "glass_delta"), na.rm = FALSE, ...)
+\method{cohens_d}{data.frame}(
+  data,
+  dv,
+  iv,
+  paired = FALSE,
+  corr = c("none", "hedges_g", "glass_delta"),
+  na.rm = FALSE,
+  ...
+)
 
-\method{cohens_d}{formula}(formula, data, paired = FALSE,
-  corr = c("none", "hedges_g", "glass_delta"), na.rm = FALSE, ...)
+\method{cohens_d}{formula}(
+  formula,
+  data,
+  paired = FALSE,
+  corr = c("none", "hedges_g", "glass_delta"),
+  na.rm = FALSE,
+  ...
+)
 
-\method{cohens_d}{htest}(ttest, corr = c("none", "hedges_g",
-  "glass_delta"), ...)
+\method{cohens_d}{htest}(ttest, corr = c("none", "hedges_g", "glass_delta"), ...)
 }
 \arguments{
 \item{...}{Further arguments passed to methods.}

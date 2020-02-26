@@ -4,8 +4,13 @@
 \alias{cor_apa}
 \title{Report Correlation in APA style}
 \usage{
-cor_apa(x, format = c("text", "markdown", "rmarkdown", "html", "latex",
-  "latex_math", "docx", "plotmath"), info = FALSE, print = TRUE)
+cor_apa(
+  x,
+  format = c("text", "markdown", "rmarkdown", "html", "latex", "latex_math", "docx",
+    "plotmath"),
+  info = FALSE,
+  print = TRUE
+)
 }
 \arguments{
 \item{x}{A call to \code{cor.test}}
