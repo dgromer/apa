@@ -9,6 +9,9 @@
 #'   and mixed design ANOVA). Can be one of \code{"greenhouse-geisser"}
 #'   (default), \code{"huynh-feldt"} or \code{"none"} (you may also use the
 #'   abbreviations \code{"gg"} or \code{"hf"}).
+#' @param force_sph_corr Logical indicating if sphericity correction should be
+#'   applied to all within factors regardless of what the result of Mauchly's
+#'   test of sphericity is (default is \code{FALSE}).
 #' @param es Character string indicating the effect size to display in the
 #'   output, one of \code{"petasq"} (partial eta squared) or \code{"getasq"}
 #'   (generalized eta squared) (you may also use the abbreviations \code{"pes"}
@@ -41,6 +44,7 @@
 anova_apa <- function(x, effect = NULL,
                       sph_corr = c("greenhouse-geisser", "gg", "huynh-feldt",
                                    "hf", "none"),
+                      force_sph_corr = FALSE,
                       es = c("petasq", "pes", "getasq", "ges"),
                       format = c("text", "markdown", "rmarkdown", "html",
                                  "latex", "latex_math", "docx", "plotmath"),
@@ -65,11 +69,12 @@ anova_apa <- function(x, effect = NULL,
   }
   else if (inherits(x, "afex_aov"))
   {
-    anova_apa_afex(x, effect, sph_corr, es, format, info, print)
+    anova_apa_afex(x, effect, sph_corr, force_sph_corr, es, format, info, print)
   }
   else if (is.list(x) && names(x)[1] == "ANOVA")
   {
-    anova_apa_ezanova(x, effect, sph_corr, es, format, info, print)
+    anova_apa_ezanova(x, effect, sph_corr, force_sph_corr, es, format, info,
+                      print)
   }
   else
   {
@@ -183,7 +188,8 @@ extract_stats_aovlist <- function(x)
 #' @importFrom magrittr %>% %<>%
 #' @importFrom purrr map map_chr
 #' @importFrom stringr str_extract
-anova_apa_afex <- function(x, effect, sph_corr, es, format, info, print)
+anova_apa_afex <- function(x, effect, sph_corr, force_sph_corr, es, format,
+                           info, print)
 {
   info_msg <- ""
 
@@ -214,8 +220,17 @@ anova_apa_afex <- function(x, effect, sph_corr, es, format, info, print)
     # Extract Mauchly's test of sphericity
     sph_tests <- s$sphericity.tests
 
-    # Check which effects do not meet the assumption of sphericity
-    mauchlys <- dimnames(sph_tests)[[1]][which(sph_tests[, "p-value"] < .05)]
+    # Check if user wants sphericity correction for all within factors
+    if (force_sph_corr)
+    {
+      # Select all within factors
+      mauchlys <- dimnames(sph_tests)[[1]]
+    }
+    else
+    {
+      # Check which effects do not meet the assumption of sphericity
+      mauchlys <- dimnames(sph_tests)[[1]][which(sph_tests[, "p-value"] < .05)]
+    }
 
     if (length(mauchlys) > 0)
     {
@@ -279,7 +294,8 @@ anova_apa_afex <- function(x, effect, sph_corr, es, format, info, print)
 #' @importFrom magrittr %>% %<>%
 #' @importFrom stringr str_extract
 #' @importFrom tibble tibble
-anova_apa_ezanova <- function(x, effect, sph_corr, es, format, info, print)
+anova_apa_ezanova <- function(x, effect, sph_corr, force_sph_corr, es, format,
+                              info, print)
 {
   info_msg <- ""
 
@@ -308,10 +324,16 @@ anova_apa_ezanova <- function(x, effect, sph_corr, es, format, info, print)
 
     # ezANOVA stores sphericity tests and correction values in two data frames,
     # which are combined here.
-    # Next, check which effects do not meet the assumption of sphericity
     mauchlys <- left_join(x$`Mauchly's Test for Sphericity`,
-                          x$`Sphericity Corrections`, by = "Effect") %>%
-      `[`(.$p < .05, )
+                          x$`Sphericity Corrections`, by = "Effect")
+
+    # Checking of significance of Mauchly's test only if user does not want to
+    # force sphericity correction for all within factors
+    if (!force_sph_corr)
+    {
+      # Check which effects do not meet the assumption of sphericity
+      mauchlys %<>% `[`(.$p < .05, )
+    }
 
     if (nrow(mauchlys) > 0)
     {
