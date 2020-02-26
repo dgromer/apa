@@ -202,8 +202,8 @@ anova_apa_afex <- function(x, effect, sph_corr, es, format, info, print)
                                    leading_zero = FALSE))
   )
 
-  # Check if within-effects are present
-  if (length(attr(x, "within")) != 0)
+  # Check if within-effects are present and user wants sphericity correction
+  if (length(attr(x, "within")) != 0 && sph_corr != "none")
   {
     # To access sphericity tests in afex, we need to call `summary`
     s <- summary(x)
