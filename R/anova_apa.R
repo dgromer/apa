@@ -237,9 +237,17 @@ anova_apa_afex <- function(x, effect, sph_corr, force_sph_corr, es, format,
       # Apply correction to degrees of freedom
       tbl[tbl$effects %in% mauchlys, c("df_n", "df_d")] %<>%
         # Multiply df with correction factor (epsilon)
-        `*`(s$pval.adjustments[mauchlys, paste(corr_method, "eps")]) %>%
-        # Format to two decimal points
-        map(fmt_stat, equal_sign = FALSE)
+        `*`(s$pval.adjustments[mauchlys, paste(corr_method, "eps")])
+
+      # Since corrected dfs have decimal places, we need to format these to two
+      tbl <-
+        tbl %>%
+        rowwise() %>%
+        # . %% 1 == 0 checks if number has decimal places
+        # As of tibble 3.0.0 we need to manually convert all column entries to
+        # character, as types are not converted automatically
+        mutate_at(c("df_n", "df_d"), ~ ifelse(. %% 1 == 0, as.character(.),
+                                              fmt_stat(., equal_sign = FALSE)))
 
       # Replace p-values in tbl with corrected ones
       tbl[tbl$effects %in% mauchlys, "p"] <-
@@ -340,9 +348,17 @@ anova_apa_ezanova <- function(x, effect, sph_corr, force_sph_corr, es, format,
       # Apply correction to degrees of freedom
       tbl[match(mauchlys$Effect, tbl$effects), c("df_n", "df_d")] %<>%
         # Multiply df with correction factor (epsilon)
-        `*`(mauchlys[[paste0(corr_method, "e")]]) %>%
-        # Format to two decimal points
-        map(fmt_stat, equal_sign = FALSE)
+        `*`(mauchlys[[paste0(corr_method, "e")]])
+
+      # Since corrected dfs have decimal places, we need to format these to two
+      tbl <-
+        tbl %>%
+        rowwise() %>%
+        # . %% 1 == 0 checks if number has decimal places
+        # As of tibble 3.0.0 we need to manually convert all column entries to
+        # character, as types are not converted automatically
+        mutate_at(c("df_n", "df_d"), ~ ifelse(. %% 1 == 0, as.character(.),
+                                              fmt_stat(., equal_sign = FALSE)))
 
       # Replace p-values in tbl with corrected ones
       tbl[match(mauchlys$Effect, tbl$effects), "p"] <-

@@ -8,6 +8,7 @@ anova_apa(
   x,
   effect = NULL,
   sph_corr = c("greenhouse-geisser", "gg", "huynh-feldt", "hf", "none"),
+  force_sph_corr = FALSE,
   es = c("petasq", "pes", "getasq", "ges"),
   format = c("text", "markdown", "rmarkdown", "html", "latex", "latex_math", "docx",
     "plotmath"),
@@ -27,6 +28,10 @@ the assumption of sphericity is violated (only applies to repeated-measures
 and mixed design ANOVA). Can be one of \code{"greenhouse-geisser"}
 (default), \code{"huynh-feldt"} or \code{"none"} (you may also use the
 abbreviations \code{"gg"} or \code{"hf"}).}
+
+\item{force_sph_corr}{Logical indicating if sphericity correction should be
+applied to all within factors regardless of what the result of Mauchly's
+test of sphericity is (default is \code{FALSE}).}
 
 \item{es}{Character string indicating the effect size to display in the
 output, one of \code{"petasq"} (partial eta squared) or \code{"getasq"}

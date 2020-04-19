@@ -20,10 +20,9 @@
 #' t_apa(t_test(extra ~ group, sleep, paired = TRUE))
 #'
 #' @export
-t_apa <- function(x, es = "cohens_d", format = c("text", "markdown",
-                                                 "rmarkdown", "html", "latex",
-                                                 "latex_math", "docx",
-                                                 "plotmath"),
+t_apa <- function(x, es = "cohens_d", es_ci = FALSE,
+                  format = c("text", "markdown", "rmarkdown", "html", "latex",
+                             "latex_math", "docx", "plotmath"),
                   info = FALSE, print = TRUE)
 {
   format <- match.arg(format)
@@ -39,11 +38,22 @@ t_apa <- function(x, es = "cohens_d", format = c("text", "markdown",
     return(apa_to_docx("t_apa", x, es = es))
   }
 
+  if (es_ci && grepl("Two", x$method) && (es != "cohens_d" ||
+                                          grepl("Welch", x$method)))
+  {
+    warning(paste("Confidence intervals currently only supported for",
+                  "'cohens_d' and non-Welch test. Will omit confidence",
+                  "interval."))
+
+    es_ci <- FALSE
+  }
+
   # Extract and format test statistics
   statistic <- fmt_stat(x$statistic)
   df <- x$parameter
   p <- fmt_pval(x$p.value)
   d <- fmt_es(cohens_d(x, corr = if (es == "cohens_d") "none" else es))
+  d_ci <- if (es_ci) paste0(" ", cohens_d_ci(x)) else ""
 
   # Format degrees of freedom if Welch correction was applied
   if (grepl("Welch", x$method))
@@ -65,7 +75,7 @@ t_apa <- function(x, es = "cohens_d", format = c("text", "markdown",
   # Put the formatted string together
   text <- paste0(fmt_symb("t", format), "(", df, ") ", statistic, ", ",
                  fmt_symb("p", format), " ", p, ", ", fmt_symb(es, format), " ",
-                 d)
+                 d, d_ci)
 
   # Further formatting for LaTeX and plotmath
   if (format == "latex")

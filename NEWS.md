@@ -4,6 +4,8 @@
 
 * Add missing backslash for chi-square in LaTeX format.
 * Fix error in one sample `cohens_d` if input is from `t_test`.
+* Fix error that was introduced by tibble 3.0.0 (old code assumed automatic type
+  conversion)
 
 # apa 0.3.2
 

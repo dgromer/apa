@@ -1,6 +1,9 @@
 #' Report Correlation in APA style
 #'
 #' @param x A call to \code{cor.test}
+#' @param r_ci Logical indicating whether to display the confidence interval
+#'   for the correlation coefficient (default is \code{FALSE}). Only available
+#'   for Pearson's product moment correlation (with n >= 4).
 #' @param format Character string specifying the output format. One of
 #'   \code{"text"}, \code{"markdown"}, \code{"rmarkdown"}, \code{html},
 #'   \code{"latex"}, \code{"latex_math"}, \code{"docx"} or \code{"plotmath"}.
@@ -22,8 +25,9 @@
 #' cor_apa(cor.test(x, y, method = "kendall"))
 #'
 #' @export
-cor_apa <- function(x, format = c("text", "markdown", "rmarkdown", "html",
-                                  "latex", "latex_math", "docx", "plotmath"),
+cor_apa <- function(x, r_ci = FALSE,
+                    format = c("text", "markdown", "rmarkdown", "html", "latex",
+                               "latex_math", "docx", "plotmath"),
                     info = FALSE, print = TRUE)
 {
   format <- match.arg(format)
@@ -41,17 +45,33 @@ cor_apa <- function(x, format = c("text", "markdown", "rmarkdown", "html",
 
   # Extract and format test statistics
   coef <- tolower(strsplit(x$method, " ")[[1]][1])
-  estimate <- fmt_stat(x$estimate, leading_zero = FALSE,
-                       negative_values = TRUE)
+  estimate <- fmt_stat(x$estimate, leading_zero = FALSE)
   df <- x$parameter
   p <- fmt_pval(x$p.value)
+
+  if (r_ci)
+  {
+    if (is.null(x$conf.int))
+    {
+      warning(paste("Confidence interval only available for Pearson's product",
+                    "moment correlation (with n >= 4)"))
+
+      r_ci <- FALSE
+    }
+    else
+    {
+      ci <- fmt_stat(x$conf.int, leading_zero = FALSE, equal_sign = FALSE)
+    }
+  }
 
   if (info) message(x$method)
 
   # Put the formatted string together
-  text <- paste0(fmt_symb(coef, format),
-                 if (coef == "pearson's") paste0("(", df, ") ") else " ",
-                 estimate, ", ", fmt_symb("p", format), " ", p)
+  text <- paste0(
+    fmt_symb(coef, format),
+    if (coef == "pearson's") paste0("(", df, ") ") else " ", estimate,
+    if (r_ci) paste0(" [", ci[1], "; ", ci[2], "]"), ", ",
+    fmt_symb("p", format), " ", p)
 
   # Further formatting for LaTeX and plotmath
   if (format == "latex")

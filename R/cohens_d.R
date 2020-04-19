@@ -275,3 +275,34 @@ cohens_d_ <- function(m1 = NULL, m2 = NULL, sd1 = NULL, sd2 = NULL, n1 = NULL,
 
   d
 }
+
+#' @importFrom MBESS conf.limits.nct
+cohens_d_ci <- function(ttest)
+{
+  if (grepl("Welch", ttest$method))
+  {
+    stop(paste(
+      "A Welch test is currently not supported for confidence interval",
+      "calculation. Set argument 'var.equal' in `t.test` to TRUE"))
+  }
+
+  conf_lims_t <- conf.limits.nct(ttest$statistic, ttest$parameter)
+
+  # Two dependent samples or one sample
+  if (grepl("Paired", ttest$method) || grepl("One Sample", ttest$method))
+  {
+    lower_d <- cohens_d_(t = conf_lims_t$Lower.Limit, n = ttest$parameter + 1,
+                         paired = TRUE)
+    upper_d <- cohens_d_(t = conf_lims_t$Upper.Limit, n = ttest$parameter + 1,
+                         paired = TRUE)
+  }
+  # t-test for two independent samples
+  else
+  {
+    lower_d <- cohens_d_(t = conf_lims_t$Lower.Limit, n = ttest$parameter + 2)
+    upper_d <- cohens_d_(t = conf_lims_t$Upper.Limit, n = ttest$parameter + 2)
+  }
+
+  paste0("[", fmt_es(lower_d, equal_sign = FALSE), "; ",
+         fmt_es(upper_d, equal_sign = FALSE), "]")
+}

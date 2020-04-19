@@ -7,6 +7,7 @@
 t_apa(
   x,
   es = "cohens_d",
+  es_ci = FALSE,
   format = c("text", "markdown", "rmarkdown", "html", "latex", "latex_math", "docx",
     "plotmath"),
   info = FALSE,
