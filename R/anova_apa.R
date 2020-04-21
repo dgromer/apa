@@ -184,6 +184,7 @@ extract_stats_aovlist <- function(x)
   )
 }
 
+#' @importFrom dplyr rowwise mutate_at
 #' @importFrom tibble tibble
 #' @importFrom magrittr %>% %<>%
 #' @importFrom purrr map map_chr
@@ -298,7 +299,7 @@ anova_apa_afex <- function(x, effect, sph_corr, force_sph_corr, es, format,
   anova_apa_print(tbl, effect, es, format, print)
 }
 
-#' @importFrom dplyr left_join
+#' @importFrom dplyr left_join rowwise mutate_at
 #' @importFrom magrittr %>% %<>%
 #' @importFrom stringr str_extract
 #' @importFrom tibble tibble

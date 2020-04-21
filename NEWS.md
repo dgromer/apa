@@ -1,4 +1,11 @@
-# apa 0.3.2.9000
+# apa 0.3.3
+
+## New features
+
+* Add option to force sphericity correction on all within factors in ANOVA or
+  turn of sphericity correction completely.
+* Add option to display confidence interval for pearson correlation.
+* Add option to display condidence interval for Cohen's d (experimental).
 
 ## Bug fixes
 

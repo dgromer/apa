@@ -1,9 +1,8 @@
 ## Information
-Fix compatibility with r-devel as t.test() now also returns the standard error
-(in list component stderr).
+Fix compatibility with tibble 3.0.0 and other minor improvements.
 
 ## Test environments
-* local Windows 10 Professional 64-bit install, R 3.5.1
+* local Windows 10 Professional 64-bit install, R 3.6.3
 * devtools::check_win_devel()
 * rhub::check_with_rdevel()
 

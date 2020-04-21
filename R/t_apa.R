@@ -5,6 +5,8 @@
 #'   \code{"cohens_d"} (default), \code{"hedges_g"} or \code{"glass_delta"} if
 #'   \code{x} is an independent samples t-test. Ignored if \code{x} is a paired
 #'   samples or one sample t-test (cohen's d is reported for these test).
+#' @param es_ci Logical indicating whether to add the 95% confidence interval
+#'   for Cohen's d (experimental; default is \code{FALSE}).
 #' @param format Character string specifying the output format. One of
 #'   \code{"text"}, \code{"markdown"}, \code{"rmarkdown"}, \code{html},
 #'   \code{"latex"}, \code{"latex_math"}, \code{"docx"} or \code{"plotmath"}.
