@@ -1,7 +1,7 @@
 Package: apa
 Type: Package
 Title: Format Outputs of Statistical Tests According to APA Guidelines
-Version: 0.3.3
+Version: 0.3.3.9000
 Authors@R: person("Daniel", "Gromer", email = "dgromer@mailbox.org", role = c("aut", "cre"))
 Description: Formatter functions in the 'apa' package take the return value of a
     statistical test function, e.g. a call to chisq.test() and return a string
@@ -27,5 +27,5 @@ Suggests:
     knitr
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.1.0
+RoxygenNote: 7.1.1
 VignetteBuilder: knitr

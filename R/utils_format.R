@@ -251,7 +251,7 @@ fmt_latex <- function(text)
 # Format character strings for better LaTeX math mode printing
 #' @importFrom magrittr %>%
 #' @importFrom purrr as_vector map_chr
-#' @importFrom stringr str_split
+#' @importFrom stringr str_split str_replace
 fmt_latex_math <- function(text)
 {
   text %>%
@@ -261,7 +261,10 @@ fmt_latex_math <- function(text)
     # Put each piece in a math environment
     map_chr(~ paste0("$", .x, "$")) %>%
     # Add commas again
-    paste(collapse = ", ")
+    paste(collapse = ", ") %>%
+    # Fix spacing if confidence interval is present (i.e., put confidence
+    # interval in its own math environment)
+    str_replace(" \\[", "$ $[")
 }
 
 # Convert APA text to an expression in R's plotmath syntax

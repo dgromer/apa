@@ -1,3 +1,10 @@
+# apa 0.3.3.9000
+
+## Bug fixes
+
+* Fix spacing error in `t_apa` output for `format = "latex_math"` with 
+  confidence interval for Cohen's d. (@yannikstegmann)
+
 # apa 0.3.3
 
 ## New features
