@@ -67,6 +67,10 @@ anova_apa <- function(x, effect = NULL,
   {
     anova_apa_aovlist(x, effect, sph_corr, es, format, info, print)
   }
+  else if (inherits(x, c("anova")))
+  {
+    anova_apa_anova(x, effect, es, format, info, print)
+  }
   else if (inherits(x, "afex_aov"))
   {
     anova_apa_afex(x, effect, sph_corr, force_sph_corr, es, format, info, print)
@@ -78,7 +82,7 @@ anova_apa <- function(x, effect = NULL,
   }
   else
   {
-    stop("'x' must be a call to `aov`, `ez::ezANOVA`, or `afex::aov_*`")
+    stop("'x' must be a call to `aov`, `car::Anova`, ez::ezANOVA`, or `afex::aov_*`")
   }
 }
 
@@ -118,6 +122,41 @@ anova_apa_aov <- function(x, effect, es, format, info, print)
   if (info && info_msg != "") message(info_msg)
 
   anova_apa_print(tbl, effect, es, format, print)
+}
+
+#' @importFrom tibble tibble
+#' @importFrom purrr map_chr
+#' @importFrom stringr str_trim
+anova_apa_anova <- function(x, effect, es, format, info, print) {
+
+  if (!es %in% c("petasq"))
+  {
+    warning(paste("A call with a model based on `car::Anova` does not support generalized eta-squared,",
+                  "using partial eta-squared instead."), call. = FALSE)
+
+    es <- "petasq"
+  }
+
+  anova <- x
+
+  # The row number where residuals are stored
+  row_resid <-nrow(anova)
+
+  # Extract information from anova object
+  tbl <- tibble(
+    effects = str_trim(row.names(anova)[-row_resid]),
+    statistic = map_chr(anova$`F value`[-row_resid], fmt_stat),
+    df_n = anova$Df[-row_resid], df_d = anova$Df[row_resid],
+    p = map_chr(anova$`Pr(>F)`[-row_resid], fmt_pval),
+    symb = map_chr(anova$`Pr(>F)`[-row_resid], p_to_symbol),
+    es = map_chr(effects, ~ fmt_es(do.call(es, list(x, .x)),
+                                   leading_zero = FALSE))
+  )
+
+  if (info && info_msg != "") message(info_msg)
+
+  anova_apa_print(tbl, effect, es, format, print)
+
 }
 
 #' @importFrom dplyr bind_rows
