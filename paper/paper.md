@@ -54,14 +54,14 @@ Using `t_apa()`, the output is automatically formatted according to the APA guid
 t(21.98) = -5.43, p < .001, d = -2.13
 ```
 
-To specify a specific output format (e.g., Markdown), the `format` argument can be used to automate font formatting.
+To automate font formatting, the `format` argument can be used to specify the output format (e.g., Markdown).
 
 ```
 > t_apa(t_test(1:10, y = c(7:20)), format = "markdown")
 *t*(21.98) = -5.43, *p* < .001, *d* = -2.13
 ```
 
-Pasting the formatted output into a Markdown file then renders automatically displays *t*(21.98) = -5.43, *p* < .001, *d* = -2.13.
+Pasting the formatted output into a Markdown file then renders automatically as *t*(21.98) = -5.43, *p* < .001, *d* = -2.13.
 
 ## ANOVA
 
