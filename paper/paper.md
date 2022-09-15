@@ -20,7 +20,7 @@ bibliography: paper.bib
 
 # Summary
 
-The `apa` R package facilitates the reporting of statistical results in scientific manuscripts by automating the process of formatting results of statistical tests according to the guidelines of the American Psychological Association (APA). By this, both the amount of work and error-proneness of manually formatting test results are significantly reduced.
+The `apa` R package facilitates the reporting of statistical results in scientific manuscripts by automating the process of formatting results of statistical tests according to the guidelines of the American Psychological Association (APA). By this, both the amount of work and error-proneness of manually formatting test results are significantly reduced. The `apa` package is available at GitHub (https://github.com/dgromer/apa/) and CRAN (https://cran.r-project.org/web/packages/apa/).
 
 # Statement of need
 
