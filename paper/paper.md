@@ -12,7 +12,7 @@ authors:
    orcid: 0000-0002-8619-7478
    affiliation: 1
 affiliations:
- - name: University of Würzburg
+ - name: University of Würzburg, Germany
    index: 1
 date: 14 September 2022
 bibliography: paper.bib
