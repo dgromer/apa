@@ -32,7 +32,6 @@ cohens_d(...)
 \method{cohens_d}{formula}(
   formula,
   data,
-  paired = FALSE,
   corr = c("none", "hedges_g", "glass_delta"),
   na.rm = FALSE,
   ...
@@ -69,9 +68,10 @@ dependent variable}
 independent variable}
 
 \item{formula}{A formula of the form \code{lhs ~ rhs} where \code{lhs} is a
-numeric variable giving the data values (dependent variable) and \code{rhs}
-a factor with two levels giving the corresponding groups (independent
-variable).}
+numeric variable giving the data values and \code{rhs}
+either \code{1} for one sample or paired data or a factor with two levels
+giving the corresponding groups. If \code{lhs} is of class \code{"Pair"}
+and \code{rhs} is \code{1}, Cohen's d for paired data will be calculated.}
 
 \item{ttest}{An object of class \code{htest} (a call to either \code{t_test}
 (preferred) or \code{t.test}).}
@@ -92,10 +92,11 @@ cohens_d(sleep, dv = extra, iv = group, paired = TRUE)
 # or
 cohens_d(sleep, dv = "extra", iv = "group", paired = TRUE)
 # formula interface
-cohens_d(extra ~ group, sleep, paired = TRUE)
+sleep2 <- reshape(sleep, direction = "wide", idvar = "ID", timevar = "group")
+cohens_d(Pair(extra.1, extra.2) ~ 1, sleep2, paired = TRUE)
 
 # Or pass a call to t_test or t.test
-cohens_d(t_test(extra ~ group, sleep, paired = TRUE))
+cohens_d(t_test(Pair(extra.1, extra.2) ~ 1, sleep2))
 }
 \references{
 Lakens, D. (2013). Calculating and reporting effect sizes to

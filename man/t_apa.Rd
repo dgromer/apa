@@ -43,6 +43,7 @@ Report t-Test in APA style
 t_apa(t_test(1:10, y = c(7:20)))
 
 # Two dependent samples t-test
-t_apa(t_test(extra ~ group, sleep, paired = TRUE))
+sleep2 <- reshape(sleep, direction = "wide", idvar = "ID", timevar = "group")
+t_apa(t_test(Pair(extra.1, extra.2) ~ 1, sleep2))
 
 }

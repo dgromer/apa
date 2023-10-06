@@ -4,6 +4,8 @@
 
 * Fix spacing error in `t_apa` output for `format = "latex_math"` with 
   confidence interval for Cohen's d. (@yannikstegmann)
+* Fix problem with formula interface for `t_test.formula` and `cohens_d.formula`
+  with r-devel.
 
 # apa 0.3.3
 
