@@ -87,6 +87,13 @@ cohens_d.default <- function(x, y = NULL, paired = FALSE,
 
     # Two dependent samples / one sample
     d <- mean(x - y, na.rm = na.rm) / sd(x - y, na.rm)
+
+    if (corr == "hedges_g")
+    {
+      j <- function(a) gamma(a / 2) / (sqrt(a / 2) * gamma((a - 1) / 2))
+
+      d <- d * j(length(x))
+    }
   }
 
   d
@@ -136,19 +143,26 @@ cohens_d.htest <- function(ttest, corr = c("none", "hedges_g", "glass_delta"),
     stop('ttest must be a call to either `t_test` or `t.test`')
   }
 
+  if (ttest$null.value != 0)
+  {
+    stop(paste(
+      "`cohens_d` does currently not support t-tests with mu != 0. Please",
+      "substract mu before passing the values to `t.test`/`t_test`")
+    )
+  }
+
   # A call to `t_test` was passed to argument 'ttest'
   if (!is.null(ttest[["data"]]))
   {
     # t-test for two dependent samples
     if (grepl("Paired", ttest$method))
     {
-      cohens_d(ttest$data$x, ttest$data$y, paired = TRUE)
+      cohens_d(ttest$data$x, ttest$data$y, paired = TRUE, corr = corr)
     }
     # t-test for one sample
     else if (grepl("One Sample", ttest$method))
     {
-      cohens_d_(t = unname(ttest$statistic), n = unname(ttest$parameter + 1),
-                paired = TRUE)
+      cohens_d(ttest$data$x, paired = TRUE, corr = corr)
     }
     # t-test for two independent samples
     else
@@ -163,13 +177,13 @@ cohens_d.htest <- function(ttest, corr = c("none", "hedges_g", "glass_delta"),
     if (grepl("Paired", ttest$method))
     {
       cohens_d_(t = unname(ttest$statistic), n = unname(ttest$parameter + 1),
-                paired = TRUE)
+                paired = TRUE, corr = corr)
     }
     # t-test for one sample
     else if (grepl("One Sample", ttest$method))
     {
       cohens_d_(t = unname(ttest$statistic), n = unname(ttest$parameter + 1),
-                paired = TRUE)
+                one_sample = TRUE, corr = corr)
     }
     # t-test for two independent samples with Welch's correction
     else if (grepl("Welch", ttest$method))
@@ -206,9 +220,13 @@ cohens_d.htest <- function(ttest, corr = c("none", "hedges_g", "glass_delta"),
 #' @param n2 Numeric, size of the second group
 #' @param t Numeric, t-test statistic
 #' @param n Numeric, total sample size
-#' @param paired Logical indicating whether to calculate Cohen's for independent
-#'   samples or one sample (\code{FALSE}, \emph{default}) or for dependent
-#'   samples (\code{TRUE}).
+#' @param paired Logical indicating whether to calculate Cohen's d for
+#'   independent samples or one sample (\code{FALSE}, \emph{default}) or for
+#'   dependent samples (\code{TRUE}).
+#' @param one_sample Logical indicating whether to calculate Cohen's d for
+#'   one sample (\code{TRUE}) or independent samples (\code{FALSE},
+#'   \emph{default}) (only relevant when providing \code{t} and \code{n}, see
+#'   below).
 #' @param corr Character specifying the correction applied to calculation of the
 #'   effect size: \code{"none"} \emph{(default)} returns Cohen's d,
 #'   \code{"hedges_g"} applies Hedges correction and \code{"glass_delta"}
@@ -229,7 +247,8 @@ cohens_d.htest <- function(ttest, corr = c("none", "hedges_g", "glass_delta"),
 #' @export
 cohens_d_ <- function(m1 = NULL, m2 = NULL, sd1 = NULL, sd2 = NULL, n1 = NULL,
                       n2 = NULL, t = NULL, n = NULL, paired = FALSE,
-                      corr = c("none", "hedges_g", "glass_delta"))
+                      one_sample = FALSE, corr = c("none", "hedges_g",
+                                                   "glass_delta"))
 {
   corr <- match.arg(corr)
 
@@ -239,13 +258,6 @@ cohens_d_ <- function(m1 = NULL, m2 = NULL, sd1 = NULL, sd2 = NULL, n1 = NULL,
   {
     d <- (m1 - m2) /
       sqrt(((n1 - 1) * sd1 ^ 2 + (n2 - 1) * sd2 ^ 2) / ((n1 + n2) - 2))
-
-    if (corr == "hedges_g")
-    {
-      j <- function(a) gamma(a / 2) / (sqrt(a / 2) * gamma((a - 1) / 2))
-
-      d <- d * j(n1 + n2 - 2)
-    }
   }
   # Two independent samples with glass' correction
   else if (corr == "glass_delta" && !paired)
@@ -265,14 +277,29 @@ cohens_d_ <- function(m1 = NULL, m2 = NULL, sd1 = NULL, sd2 = NULL, n1 = NULL,
     d <- t * sqrt(1 / n1 + 1 / n2)
   }
   # Two independent samples with t and n
-  else if (!any(sapply(list(t, n), is.null)) && !paired)
+  else if (!any(sapply(list(t, n), is.null)) && !paired && !one_sample)
   {
     d <- 2 * t / sqrt(n)
   }
   # Two dependent samples with t and n
-  else if (!any(sapply(list(t, n), is.null)) && paired)
+  else if (!any(sapply(list(t, n), is.null)) && (paired || one_sample))
   {
     d <- t / sqrt(n)
+  }
+
+  # Apply Hedges g correction, if requested
+  if (corr == "hedges_g")
+  {
+    j <- function(a) gamma(a / 2) / (sqrt(a / 2) * gamma((a - 1) / 2))
+
+    if (paired || one_sample)
+    {
+      d <- d * j(n)
+    }
+    else
+    {
+      d <- d * j(n1 + n2 - 2)
+    }
   }
 
   d
@@ -291,12 +318,19 @@ cohens_d_ci <- function(ttest)
   conf_lims_t <- conf.limits.nct(ttest$statistic, ttest$parameter)
 
   # Two dependent samples or one sample
-  if (grepl("Paired", ttest$method) || grepl("One Sample", ttest$method))
+  if (grepl("Paired", ttest$method))
   {
     lower_d <- cohens_d_(t = conf_lims_t$Lower.Limit, n = ttest$parameter + 1,
                          paired = TRUE)
     upper_d <- cohens_d_(t = conf_lims_t$Upper.Limit, n = ttest$parameter + 1,
                          paired = TRUE)
+  }
+  else if (grepl("One Sample", ttest$method))
+  {
+    lower_d <- cohens_d_(t = conf_lims_t$Lower.Limit, n = ttest$parameter + 1,
+                         one_sample = TRUE)
+    upper_d <- cohens_d_(t = conf_lims_t$Upper.Limit, n = ttest$parameter + 1,
+                         one_sample = TRUE)
   }
   # t-test for two independent samples
   else

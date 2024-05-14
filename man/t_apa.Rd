@@ -6,7 +6,7 @@
 \usage{
 t_apa(
   x,
-  es = "cohens_d",
+  es = c("cohens_d", "hedges_g", "glass_delta"),
   es_ci = FALSE,
   format = c("text", "markdown", "rmarkdown", "html", "latex", "latex_math", "docx",
     "plotmath"),
@@ -22,7 +22,7 @@ t_apa(
 \code{x} is an independent samples t-test. Ignored if \code{x} is a paired
 samples or one sample t-test (cohen's d is reported for these test).}
 
-\item{es_ci}{Logical indicating whether to add the 95% confidence interval
+\item{es_ci}{Logical indicating whether to add the 95\% confidence interval
 for Cohen's d (experimental; default is \code{FALSE}).}
 
 \item{format}{Character string specifying the output format. One of

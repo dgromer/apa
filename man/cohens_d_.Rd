@@ -14,6 +14,7 @@ cohens_d_(
   t = NULL,
   n = NULL,
   paired = FALSE,
+  one_sample = FALSE,
   corr = c("none", "hedges_g", "glass_delta")
 )
 }
@@ -34,9 +35,14 @@ cohens_d_(
 
 \item{n}{Numeric, total sample size}
 
-\item{paired}{Logical indicating whether to calculate Cohen's for independent
-samples or one sample (\code{FALSE}, \emph{default}) or for dependent
-samples (\code{TRUE}).}
+\item{paired}{Logical indicating whether to calculate Cohen's d for
+independent samples or one sample (\code{FALSE}, \emph{default}) or for
+dependent samples (\code{TRUE}).}
+
+\item{one_sample}{Logical indicating whether to calculate Cohen's d for
+one sample (\code{TRUE}) or independent samples (\code{FALSE},
+\emph{default}) (only relevant when providing \code{t} and \code{n}, see
+below).}
 
 \item{corr}{Character specifying the correction applied to calculation of the
 effect size: \code{"none"} \emph{(default)} returns Cohen's d,

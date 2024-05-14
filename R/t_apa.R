@@ -5,7 +5,7 @@
 #'   \code{"cohens_d"} (default), \code{"hedges_g"} or \code{"glass_delta"} if
 #'   \code{x} is an independent samples t-test. Ignored if \code{x} is a paired
 #'   samples or one sample t-test (cohen's d is reported for these test).
-#' @param es_ci Logical indicating whether to add the 95% confidence interval
+#' @param es_ci Logical indicating whether to add the 95\% confidence interval
 #'   for Cohen's d (experimental; default is \code{FALSE}).
 #' @param format Character string specifying the output format. One of
 #'   \code{"text"}, \code{"markdown"}, \code{"rmarkdown"}, \code{html},
@@ -23,12 +23,14 @@
 #' t_apa(t_test(Pair(extra.1, extra.2) ~ 1, sleep2))
 #'
 #' @export
-t_apa <- function(x, es = "cohens_d", es_ci = FALSE,
-                  format = c("text", "markdown", "rmarkdown", "html", "latex",
-                             "latex_math", "docx", "plotmath"),
+t_apa <- function(x, es = c("cohens_d", "hedges_g", "glass_delta"),
+                  es_ci = FALSE, format = c("text", "markdown", "rmarkdown",
+                                            "html", "latex", "latex_math",
+                                            "docx", "plotmath"),
                   info = FALSE, print = TRUE)
 {
   format <- match.arg(format)
+  es <- match.arg(es)
 
   # Make sure that 'x' was a call to `t_test` or `t.test`
   if (!inherits(x, "htest") && !grepl("t-test", x$method))
@@ -51,6 +53,14 @@ t_apa <- function(x, es = "cohens_d", es_ci = FALSE,
     es_ci <- FALSE
   }
 
+  # Check if Glass' Delta was requested for one sample or paired t-test.
+  if (es == "glass_delta" && (grepl("One Sample|Paired", x$method)))
+  {
+    warning(paste0("'", es, "' not available for ", x$method, ",",
+                   " 'cohens_d' will be reported instead."))
+    es <- "cohens_d"
+  }
+
   # Extract and format test statistics
   statistic <- fmt_stat(x$statistic)
   df <- x$parameter
@@ -62,15 +72,6 @@ t_apa <- function(x, es = "cohens_d", es_ci = FALSE,
   if (grepl("Welch", x$method))
   {
     df <- fmt_stat(df, equal_sign = FALSE)
-  }
-
-  # Check if Hedge's g* or Glass' Delta were requested for one sample or paired
-  # t-test.
-  if (es != "cohens_d" && (grepl("One Sample|Paired", x$method)))
-  {
-    warning(paste0("'", es, "' not available for ", x$method, ",",
-                   " 'cohens_d' will be reported instead."))
-    es <- "cohens_d"
   }
 
   if (info) message(x$method)
