@@ -24,7 +24,9 @@ t_test(x, ...)
 \arguments{
 \item{x}{a (non-empty) numeric vector of data values.}
 
-\item{...}{further arguments to be passed to or from methods.}
+\item{...}{further arguments to be passed to or from methods.
+    For the \code{formula} method, this includes arguments of the
+    default method, but not \code{paired}.}
 
 \item{y}{an optional (non-empty) numeric vector of data values.}
 
@@ -51,7 +53,7 @@ t_test(x, ...)
     \code{1} for a one-sample or paired test or a factor
     with two levels giving the corresponding groups. If \code{lhs} is of 
     class \code{"\link[stats]{Pair}"} and \code{rhs} is \code{1}, a paired test
-    is done.}
+    is done, see Examples.}
 
 \item{data}{an optional matrix or data frame (or similar: see
     \code{\link[stats]{model.frame}}) containing the variables in the
@@ -62,8 +64,7 @@ t_test(x, ...)
     to be used.}
 
 \item{na.action}{a function which indicates what should happen when
-    the data contain \code{NA}s.  Defaults to
-    \code{getOption("na.action")}.}
+    the data contain \code{\link{NA}}s.}
 }
 \description{
 A wrapper for \code{t.test} which includes the original data in the returned
