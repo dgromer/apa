@@ -1,4 +1,4 @@
-# apa 0.3.4.9000
+# apa 0.3.5
 
 ## Bug fixes
 
@@ -7,6 +7,7 @@
 * Add `one_sample` argument to `cohens_d_` to specify if Cohen's d is requested
   for if providing t and n.
 * Fix a missing escape for percent sign in the documentation of `t_apa`.
+* Use `requireNamespace` for suggested packages in examples and tests.
 
 # apa 0.3.4
 
