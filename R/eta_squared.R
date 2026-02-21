@@ -20,6 +20,11 @@ petasq <- function(x, effect)
   {
     petasq_aovlist(x, effect)
   }
+  #car::Anova
+  else if (inherits(x, "anova"))
+  {
+    petasq_anova(x, effect)
+  }
   # afex
   else if (inherits(x, "afex_aov"))
   {
@@ -41,6 +46,22 @@ petasq <- function(x, effect)
 petasq_aov <- function(x, effect)
 {
   x <- summary(x, intercept = TRUE)[[1]]
+
+  row.names(x) %<>% str_trim()
+
+  if (!effect %in% row.names(x))
+  {
+    stop("Specified effect not found")
+  }
+
+  petasq_(x[effect, "Sum Sq"], x["Residuals", "Sum Sq"])
+}
+
+
+#' @importFrom magrittr %<>%
+#' @importFrom stringr str_trim
+petasq_anova <- function(x, effect)
+{
 
   row.names(x) %<>% str_trim()
 
