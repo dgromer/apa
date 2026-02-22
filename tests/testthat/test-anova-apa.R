@@ -1,7 +1,6 @@
 context("anova_apa")
 
 library(dplyr, warn.conflicts = FALSE)
-library(magrittr, warn.conflicts = FALSE)
 
 if (requireNamespace("ez", quietly = TRUE)) {
   test_that("Formal structure for anova_apa output (ez)", {
@@ -9,12 +8,12 @@ if (requireNamespace("ez", quietly = TRUE)) {
     data(ANT, package = "ez")
 
     data <-
-      ANT %>%
-      filter(error == 0) %>%
-      group_by(subnum, group, cue, flank) %>%
-      summarise(rt = mean(rt)) %>%
-      filter(!is.nan(rt)) %>% # delete empty groups (fix for change in dplyr 0.8)
-      as.data.frame # ezANOVA does not support tbl_df
+      ANT |>
+      filter(error == 0) |>
+      group_by(subnum, group, cue, flank) |>
+      summarize(rt = mean(rt)) |>
+      filter(!is.nan(rt)) |> # delete empty groups (fix for change in dplyr 0.8)
+      as.data.frame() # ezANOVA does not support tbl_df
 
     anova <- anova_apa(
       ez::ezANOVA(data, dv = rt, wid = subnum, within = c(cue, flank),

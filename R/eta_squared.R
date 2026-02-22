@@ -36,13 +36,12 @@ petasq <- function(x, effect)
   }
 }
 
-#' @importFrom magrittr %<>%
 #' @importFrom stringr str_trim
 petasq_aov <- function(x, effect)
 {
   x <- summary(x, intercept = TRUE)[[1]]
 
-  row.names(x) %<>% str_trim()
+  row.names(x) <- str_trim(row.names(x))
 
   if (!effect %in% row.names(x))
   {

@@ -236,32 +236,30 @@ p_to_symbol <- function(p)
 
 # Format character strings for better LaTeX printing (i.e. insert non-breaking
 # spaces at appropriate positions)
-#' @importFrom magrittr %>%
 fmt_latex <- function(text)
 {
-  text %>%
+  text |>
     # Non-breaking spaces around equal sign, smaller than and greater than
-    gsub(" ([<=>]) ", "~\\1~", .) %>%
+    gsub(" ([<=>]) ", "~\\1~", x = _) |>
     # Non-breaking space between degrees of freedom in F-value
-    gsub("(\\([0-9]+.*,) ([0-9]+.*\\))", "\\1~\\2", .) %>%
+    gsub("(\\([0-9]+.*,) ([0-9]+.*\\))", "\\1~\\2", x = _) |>
     # Non-breaking spaces if n is displayed in chi^2 parentheses
-    gsub("(, n)", ",~n", .)
+    gsub("(, n)", ",~n", x = _)
 }
 
 # Format character strings for better LaTeX math mode printing
-#' @importFrom magrittr %>%
 #' @importFrom purrr as_vector map_chr
 #' @importFrom stringr str_split str_replace
 fmt_latex_math <- function(text)
 {
-  text %>%
+  text |>
     # Split string at commas (but not if comma is in parenthesis, e.g. F(1, 50))
-    str_split(", (?![^(]*\\))") %>%
-    as_vector() %>%
+    str_split(", (?![^(]*\\))") |>
+    as_vector() |>
     # Put each piece in a math environment
-    map_chr(\(x) paste0("$", x, "$")) %>%
+    map_chr(\(x) paste0("$", x, "$")) |>
     # Add commas again
-    paste(collapse = ", ") %>%
+    paste(collapse = ", ") |>
     # Fix spacing if confidence interval is present (i.e., put confidence
     # interval in its own math environment)
     str_replace(" \\[", "$ $[")

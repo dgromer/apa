@@ -188,7 +188,6 @@ extract_stats_aovlist <- function(x)
 
 #' @importFrom dplyr rowwise mutate_at
 #' @importFrom tibble tibble
-#' @importFrom magrittr %>% %<>%
 #' @importFrom purrr map map_chr
 #' @importFrom stringr str_extract
 anova_apa_afex <- function(x, effect, sph_corr, force_sph_corr, es, format,
@@ -238,15 +237,16 @@ anova_apa_afex <- function(x, effect, sph_corr, force_sph_corr, es, format,
     if (length(mauchlys) > 0)
     {
       # Apply correction to degrees of freedom
-      tbl[tbl$effects %in% mauchlys, c("df_n", "df_d")] %<>%
+      tbl[tbl$effects %in% mauchlys, c("df_n", "df_d")] <-
         # Multiply df with correction factor (epsilon)
-        `*`(s$pval.adjustments[mauchlys, paste(corr_method, "eps")])
+        tbl[tbl$effects %in% mauchlys, c("df_n", "df_d")] *
+        s$pval.adjustments[mauchlys, paste(corr_method, "eps")]
 
       # Since corrected dfs have decimal places, we need to format these to two
       tbl <-
-        tbl %>%
-        rowwise() %>%
-        # . %% 1 == 0 checks if number has decimal places
+        tbl |>
+        rowwise() |>
+        # x %% 1 == 0 checks if number has decimal places
         # As of tibble 3.0.0 we need to manually convert all column entries to
         # character, as types are not converted automatically
         mutate_at(c("df_n", "df_d"),
@@ -255,12 +255,12 @@ anova_apa_afex <- function(x, effect, sph_corr, force_sph_corr, es, format,
 
       # Replace p-values in tbl with corrected ones
       tbl[tbl$effects %in% mauchlys, "p"] <-
-        s$pval.adjustments[mauchlys, paste0("Pr(>F[", corr_method, "])")] %>%
+        s$pval.adjustments[mauchlys, paste0("Pr(>F[", corr_method, "])")] |>
         map_chr(fmt_pval)
 
       # Update significance asterisks
       tbl$symb <-
-        tbl$p %>%
+        tbl$p |>
         # P-values have already been formatted, so need to workaround that
         map_chr(\(x) {
           if (x == "< .001")
@@ -269,12 +269,16 @@ anova_apa_afex <- function(x, effect, sph_corr, force_sph_corr, es, format,
           }
           else
           {
-            x %>% str_extract("[0-9.]+") %>% as.numeric() %>% p_to_symbol()
+            x |>
+              str_extract("[0-9.]+") |>
+              as.numeric() |>
+              p_to_symbol()
           }
         })
 
       # Add performed corrections to info message
-      info_msg %<>% paste0(
+      info_msg <- paste0(
+        info_msg,
         "Sphericity corrections:\n",
         "  The following effects were adjusted using the ",
         if (corr_method == "GG") "Greenhouse-Geisser" else "Huynh-Feldt",
@@ -287,7 +291,8 @@ anova_apa_afex <- function(x, effect, sph_corr, force_sph_corr, es, format,
     }
     else
     {
-      info_msg %<>% paste0(
+      info_msg <- paste0(
+        info_msg,
         "Sphericity corrections:\n",
         "  No corrections applied, all p-values for Mauchly's test p > .05"
       )
@@ -303,7 +308,6 @@ anova_apa_afex <- function(x, effect, sph_corr, force_sph_corr, es, format,
 }
 
 #' @importFrom dplyr left_join rowwise mutate_at
-#' @importFrom magrittr %>% %<>%
 #' @importFrom stringr str_extract
 #' @importFrom tibble tibble
 anova_apa_ezanova <- function(x, effect, sph_corr, force_sph_corr, es, format,
@@ -344,21 +348,22 @@ anova_apa_ezanova <- function(x, effect, sph_corr, force_sph_corr, es, format,
     if (!force_sph_corr)
     {
       # Check which effects do not meet the assumption of sphericity
-      mauchlys %<>% `[`(.$p < .05, )
+      mauchlys <- mauchlys[mauchlys$p < .05, ]
     }
 
     if (nrow(mauchlys) > 0)
     {
       # Apply correction to degrees of freedom
-      tbl[match(mauchlys$Effect, tbl$effects), c("df_n", "df_d")] %<>%
+      tbl[match(mauchlys$Effect, tbl$effects), c("df_n", "df_d")] <-
         # Multiply df with correction factor (epsilon)
-        `*`(mauchlys[[paste0(corr_method, "e")]])
+        tbl[match(mauchlys$Effect, tbl$effects), c("df_n", "df_d")] *
+        mauchlys[[paste0(corr_method, "e")]]
 
       # Since corrected dfs have decimal places, we need to format these to two
       tbl <-
-        tbl %>%
-        rowwise() %>%
-        # . %% 1 == 0 checks if number has decimal places
+        tbl |>
+        rowwise() |>
+        # x %% 1 == 0 checks if number has decimal places
         # As of tibble 3.0.0 we need to manually convert all column entries to
         # character, as types are not converted automatically
         mutate_at(c("df_n", "df_d"),
@@ -367,12 +372,12 @@ anova_apa_ezanova <- function(x, effect, sph_corr, force_sph_corr, es, format,
 
       # Replace p-values in tbl with corrected ones
       tbl[match(mauchlys$Effect, tbl$effects), "p"] <-
-        mauchlys[[paste0("p[", corr_method, "]")]] %>%
+        mauchlys[[paste0("p[", corr_method, "]")]] |>
         map_chr(fmt_pval)
 
       # Update significance asterisks
       tbl$symb <-
-        tbl$p %>%
+        tbl$p |>
         # P-values have already been formatted, so need to workaround that
         map_chr(\(x) {
           if (x == "< .001")
@@ -381,12 +386,16 @@ anova_apa_ezanova <- function(x, effect, sph_corr, force_sph_corr, es, format,
           }
           else
           {
-            x %>% str_extract("[0-9.]+") %>% as.numeric() %>% p_to_symbol()
+            x |>
+              str_extract("[0-9.]+") |>
+              as.numeric() |>
+              p_to_symbol()
           }
         })
 
       # Add performed corrections to info message
-      info_msg %<>% paste0(
+      info_msg <- paste0(
+        info_msg,
         "Sphericity corrections:\n",
         "  The following effects were adjusted using the ",
         if (corr_method == "GG") "Greenhouse-Geisser" else "Huynh-Feldt",
@@ -398,7 +407,8 @@ anova_apa_ezanova <- function(x, effect, sph_corr, force_sph_corr, es, format,
     }
     else
     {
-      info_msg %<>% paste0(
+      info_msg <- paste0(
+        info_msg,
         "Sphericity corrections:\n",
         "  No corrections applied, all p-values for Mauchly's test p > .05"
       )
@@ -410,7 +420,6 @@ anova_apa_ezanova <- function(x, effect, sph_corr, force_sph_corr, es, format,
   anova_apa_print(tbl, effect, es, format, print)
 }
 
-#' @importFrom magrittr %>% %<>%
 #' @importFrom purrr map_chr
 #' @importFrom rmarkdown render
 #' @importFrom tibble tibble
@@ -507,9 +516,9 @@ anova_apa_print_default <- function(tbl, effect, es_name)
   else
   {
     # Extract text for specified effect from tbl.
-    `[.data.frame`(tbl, tbl$Effect == effect, " ") %>%
+    `[.data.frame`(tbl, tbl$Effect == effect, " ") |>
       # Remove alignment whitespaces
-      gsub("[[:blank:]]+", " ", .) %>%
+      gsub("[[:blank:]]+", " ", x = _) |>
       cat()
   }
 }
@@ -532,9 +541,9 @@ anova_apa_print_docx <- function(tbl, effect, es_name)
   else
   {
     # Select only the output string for 'effect'
-    out[which(tbl$effects == effect)] %>%
+    out[which(tbl$effects == effect)] |>
       # Remove the name of the effect from the beginning of the string
-      sub("^.*\\s\\*F\\*", "\\*F\\*", .) %>%
+      sub("^.*\\s\\*F\\*", "\\*F\\*", x = _) |>
       # Write to markdown file
       cat()
   }
@@ -562,7 +571,6 @@ anova_apa_print_plotmath <- function(tbl, text, effect)
   )
 }
 
-#' @importFrom magrittr %>%
 #' @importFrom purrr map map_dbl
 #' @importFrom utils combn
 reorder_anova_tbl <- function(x)
@@ -574,20 +582,19 @@ reorder_anova_tbl <- function(x)
   concat_fctrs <- function(...) paste(..., collapse = ":")
 
   new_order <-
-    seq_along(factors) %>%
+    seq_along(factors) |>
     # Create the new effects order (main effects, two-way interactions, ...)
-    map(\(.x) combn(factors, .x, FUN = concat_fctrs, simplify = FALSE)) %>%
-    unlist() %>%
+    map(\(.x) combn(factors, .x, FUN = concat_fctrs, simplify = FALSE)) |>
+    unlist() |>
     # Add regex for intercept line (if intercept is present in 'x')
-    {
+    (\(.x) {
       if (any(grepl("(Intercept)", x$effects)))
-        c("\\(Intercept\\)", .)
+        c("\\(Intercept\\)", .x)
       else
-        .
-    } %>%
+        .x
+    })() |>
     # Get row index for each effect in old ANOVA table
     map_dbl(\(.x) grep(paste0("^", .x, "$"), x$effects))
-
 
   # Apply new order to 'x'
   x[new_order, ]
