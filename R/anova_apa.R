@@ -113,8 +113,8 @@ anova_apa_aov <- function(x, effect, es, format, info, print)
     df_n = anova$Df[-row_resid], df_d = anova$Df[row_resid],
     p = map_chr(anova$`Pr(>F)`[-row_resid], fmt_pval),
     symb = map_chr(anova$`Pr(>F)`[-row_resid], p_to_symbol),
-    es = map_chr(effects, ~ fmt_es(do.call(es, list(x, .x)),
-                                   leading_zero = FALSE))
+    es = map_chr(effects, \(.x) fmt_es(do.call(es, list(x, .x)),
+                                       leading_zero = FALSE))
   )
 
   if (info && info_msg != "") message(info_msg)
@@ -153,8 +153,8 @@ anova_apa_aovlist <- function(x, effect, sph_corr, es, format, info, print)
 
   # Calculate effect sizes as extra step, because `extract_stats_aovlist` can't
   # call effect size function on aovlist object ('x') as this is not forwarded.
-  tbl$es <- map_chr(tbl$effects, ~ fmt_es(do.call(es, list(x, .x)),
-                                          leading_zero = FALSE))
+  tbl$es <- map_chr(tbl$effects, \(.x) fmt_es(do.call(es, list(x, .x)),
+                                              leading_zero = FALSE))
 
   # Reorder rows in tbl
   tbl <- reorder_anova_tbl(tbl)
@@ -207,8 +207,8 @@ anova_apa_afex <- function(x, effect, sph_corr, force_sph_corr, es, format,
     df_n = anova$`num Df`, df_d = anova$`den Df`,
     p = map_chr(anova$`Pr(>F)`, fmt_pval),
     symb = map_chr(anova$`Pr(>F)`, p_to_symbol),
-    es = map_chr(effects, ~ fmt_es(do.call(es, list(x, .x)),
-                                   leading_zero = FALSE))
+    es = map_chr(effects, \(.x) fmt_es(do.call(es, list(x, .x)),
+                                       leading_zero = FALSE))
   )
 
   # Check if within-effects are present and user wants sphericity correction
@@ -249,8 +249,9 @@ anova_apa_afex <- function(x, effect, sph_corr, force_sph_corr, es, format,
         # . %% 1 == 0 checks if number has decimal places
         # As of tibble 3.0.0 we need to manually convert all column entries to
         # character, as types are not converted automatically
-        mutate_at(c("df_n", "df_d"), ~ ifelse(. %% 1 == 0, as.character(.),
-                                              fmt_stat(., equal_sign = FALSE)))
+        mutate_at(c("df_n", "df_d"),
+                  \(x) ifelse(x %% 1 == 0, as.character(x),
+                              fmt_stat(x, equal_sign = FALSE)))
 
       # Replace p-values in tbl with corrected ones
       tbl[tbl$effects %in% mauchlys, "p"] <-
@@ -261,14 +262,14 @@ anova_apa_afex <- function(x, effect, sph_corr, force_sph_corr, es, format,
       tbl$symb <-
         tbl$p %>%
         # P-values have already been formatted, so need to workaround that
-        map_chr(~ {
-          if (.x == "< .001")
+        map_chr(\(x) {
+          if (x == "< .001")
           {
             "***"
           }
           else
           {
-            .x %>% str_extract("[0-9.]+") %>% as.numeric() %>% p_to_symbol()
+            x %>% str_extract("[0-9.]+") %>% as.numeric() %>% p_to_symbol()
           }
         })
 
@@ -323,8 +324,8 @@ anova_apa_ezanova <- function(x, effect, sph_corr, force_sph_corr, es, format,
     statistic = map_chr(anova$F, fmt_stat),
     df_n = anova$DFn, df_d = anova$DFd, p = map_chr(anova$p, fmt_pval),
     symb = map_chr(anova$p, p_to_symbol),
-    es = map_chr(effects, ~ fmt_es(do.call(es, list(x, .x)),
-                                   leading_zero = FALSE))
+    es = map_chr(effects, \(.x) fmt_es(do.call(es, list(x, .x)),
+                                       leading_zero = FALSE))
   )
 
   # Apply correction for violation of sphericity if required
@@ -360,8 +361,9 @@ anova_apa_ezanova <- function(x, effect, sph_corr, force_sph_corr, es, format,
         # . %% 1 == 0 checks if number has decimal places
         # As of tibble 3.0.0 we need to manually convert all column entries to
         # character, as types are not converted automatically
-        mutate_at(c("df_n", "df_d"), ~ ifelse(. %% 1 == 0, as.character(.),
-                                              fmt_stat(., equal_sign = FALSE)))
+        mutate_at(c("df_n", "df_d"),
+                  \(x) ifelse(x %% 1 == 0, as.character(x),
+                              fmt_stat(x, equal_sign = FALSE)))
 
       # Replace p-values in tbl with corrected ones
       tbl[match(mauchlys$Effect, tbl$effects), "p"] <-
@@ -372,14 +374,14 @@ anova_apa_ezanova <- function(x, effect, sph_corr, force_sph_corr, es, format,
       tbl$symb <-
         tbl$p %>%
         # P-values have already been formatted, so need to workaround that
-        map_chr(~ {
-          if (.x == "< .001")
+        map_chr(\(x) {
+          if (x == "< .001")
           {
             "***"
           }
           else
           {
-            .x %>% str_extract("[0-9.]+") %>% as.numeric() %>% p_to_symbol()
+            x %>% str_extract("[0-9.]+") %>% as.numeric() %>% p_to_symbol()
           }
         })
 
@@ -562,6 +564,7 @@ anova_apa_print_plotmath <- function(tbl, text, effect)
 
 #' @importFrom magrittr %>%
 #' @importFrom purrr map map_dbl
+#' @importFrom utils combn
 reorder_anova_tbl <- function(x)
 {
   # Get names of all main effects
@@ -573,7 +576,7 @@ reorder_anova_tbl <- function(x)
   new_order <-
     seq_along(factors) %>%
     # Create the new effects order (main effects, two-way interactions, ...)
-    map(~ combn(factors, .x, FUN = concat_fctrs, simplify = FALSE)) %>%
+    map(\(.x) combn(factors, .x, FUN = concat_fctrs, simplify = FALSE)) %>%
     unlist() %>%
     # Add regex for intercept line (if intercept is present in 'x')
     {
@@ -583,7 +586,7 @@ reorder_anova_tbl <- function(x)
         .
     } %>%
     # Get row index for each effect in old ANOVA table
-    map_dbl(~ grep(paste0("^", .x, "$"), x$effects))
+    map_dbl(\(.x) grep(paste0("^", .x, "$"), x$effects))
 
 
   # Apply new order to 'x'
