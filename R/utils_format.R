@@ -244,7 +244,7 @@ fmt_latex <- function(text)
     gsub(" ([<=>]) ", "~\\1~", .) %>%
     # Non-breaking space between degrees of freedom in F-value
     gsub("(\\([0-9]+.*,) ([0-9]+.*\\))", "\\1~\\2", .) %>%
-    # Non-breaking spaces if n is displayed in chi^2 parantheses
+    # Non-breaking spaces if n is displayed in chi^2 parentheses
     gsub("(, n)", ",~n", .)
 }
 
