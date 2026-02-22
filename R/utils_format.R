@@ -259,7 +259,7 @@ fmt_latex_math <- function(text)
     str_split(", (?![^(]*\\))") %>%
     as_vector() %>%
     # Put each piece in a math environment
-    map_chr(~ paste0("$", .x, "$")) %>%
+    map_chr(\(x) paste0("$", x, "$")) %>%
     # Add commas again
     paste(collapse = ", ") %>%
     # Fix spacing if confidence interval is present (i.e., put confidence
