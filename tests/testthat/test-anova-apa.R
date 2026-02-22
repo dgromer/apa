@@ -249,7 +249,7 @@ if (requireNamespace("ez", quietly = TRUE)) {
 
   test_that("anova_apa: html (ez)", {
 
-    expect_identical(anova_apa(anova_afex, effect = "dose", print = FALSE,
+    expect_identical(anova_apa(anova_ez, effect = "dose", print = FALSE,
                                format = "html"),
                      paste0("<i>F</i>(2, 12) = 5.12, <i>p</i> = .025, ",
                             "<i>&eta;<sup>2</sup><sub>p</sub></i> = .46"))
