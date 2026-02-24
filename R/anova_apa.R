@@ -523,6 +523,7 @@ anova_apa_print_default <- function(tbl, effect, es_name)
   }
 }
 
+#' @importFrom rmarkdown render
 anova_apa_print_docx <- function(tbl, effect, es_name)
 {
   # Create temporary markdown file
