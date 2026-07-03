@@ -16,6 +16,9 @@
 #'   output, one of \code{"petasq"} (partial eta squared) or \code{"getasq"}
 #'   (generalized eta squared) (you may also use the abbreviations \code{"pes"}
 #'   or \code{"ges"}).
+#' @param es_ci Logical indicating whether to add the 90\% confidence interval
+#'   for partial eta squared (experimental; default is \code{FALSE}). Currently
+#'   not available for generalized eta squared.
 #' @param format Character string specifying the output format. One of
 #'   \code{"text"}, \code{"markdown"}, \code{"rmarkdown"}, \code{html},
 #'   \code{"latex"}, \code{"latex_math"}, \code{"docx"} or \code{"plotmath"}.
@@ -48,6 +51,7 @@ anova_apa <- function(x, effect = NULL,
                                    "hf", "none"),
                       force_sph_corr = FALSE,
                       es = c("petasq", "pes", "getasq", "ges"),
+                      es_ci = FALSE,
                       format = c("text", "markdown", "rmarkdown", "html",
                                  "latex", "latex_math", "docx", "plotmath"),
                       info = FALSE, print = TRUE)
@@ -58,25 +62,37 @@ anova_apa <- function(x, effect = NULL,
 
   es <- switch(es, pes =, petasq = "petasq", ges =, getasq = "getasq")
 
+  if (es_ci && es == "getasq")
+  {
+    message("Confidence interval not available for generalized eta squared")
+    es_ci <- FALSE
+  }
+
   # Use a pseudo-S3 method dispatch, because `ezANOVA` returns a list without a
   # particular class
 
   if (inherits(x, c("aov", "lm")))
   {
-    anova_apa_aov(x, effect, es, format, info, print)
+    anova_apa_aov(x, effect = effect, es = es, es_ci = es_ci, format = format,
+                  info = info, print = print)
   }
   else if (inherits(x, c("aovlist", "listof")))
   {
-    anova_apa_aovlist(x, effect, sph_corr, es, format, info, print)
+    anova_apa_aovlist(x, effect = effect, sph_corr = sph_corr, es = es,
+                      es_ci = es_ci, format = format, info = info,
+                      print = print)
   }
   else if (inherits(x, "afex_aov"))
   {
-    anova_apa_afex(x, effect, sph_corr, force_sph_corr, es, format, info, print)
+    anova_apa_afex(x, effect = effect, sph_corr = sph_corr,
+                   force_sph_corr = force_sph_corr, es = es, es_ci = es_ci,
+                   format = format, info = info, print = print)
   }
   else if (is.list(x) && names(x)[1] == "ANOVA")
   {
-    anova_apa_ezanova(x, effect, sph_corr, force_sph_corr, es, format, info,
-                      print)
+    anova_apa_ezanova(x, effect = effect, sph_corr = sph_corr,
+                      force_sph_corr = force_sph_corr, es = es, es_ci = es_ci,
+                      format = format, info = info, print = print)
   }
   else
   {
@@ -87,7 +103,7 @@ anova_apa <- function(x, effect = NULL,
 #' @importFrom tibble tibble
 #' @importFrom purrr map_chr
 #' @importFrom stringr str_trim
-anova_apa_aov <- function(x, effect, es, format, info, print)
+anova_apa_aov <- function(x, effect, es, es_ci, format, info, print)
 {
   # Check for unsupported effect size for calls to `aov`
   if (es == "getasq")
@@ -117,14 +133,21 @@ anova_apa_aov <- function(x, effect, es, format, info, print)
                                        leading_zero = FALSE))
   )
 
+  if (es_ci)
+  {
+    tbl$es_ci <- map_chr(tbl$effects, \(effect) petasq_ci(x, effect))
+  }
+
   if (info && info_msg != "") message(info_msg)
 
-  anova_apa_print(tbl, effect, es, format, print)
+  anova_apa_print(tbl, effect = effect, es = es, es_ci = es_ci, format = format,
+                  print = print)
 }
 
 #' @importFrom dplyr bind_rows
 #' @importFrom purrr flatten map
-anova_apa_aovlist <- function(x, effect, sph_corr, es, format, info, print)
+anova_apa_aovlist <- function(x, effect, sph_corr, es, es_ci, format, info,
+                              print)
 {
   # Inform that calls to `aov` do not support sphericity correction
   if (sph_corr != "none")
@@ -159,9 +182,15 @@ anova_apa_aovlist <- function(x, effect, sph_corr, es, format, info, print)
   # Reorder rows in tbl
   tbl <- reorder_anova_tbl(tbl)
 
+  if (es_ci)
+  {
+    tbl$es_ci <- map_chr(tbl$effects, \(effect) petasq_ci(x, effect))
+  }
+
   if (info && info_msg != "") message(info_msg)
 
-  anova_apa_print(tbl, effect, es, format, print)
+  anova_apa_print(tbl, effect = effect, es = es, es_ci = es_ci, format = format,
+                  print = print)
 }
 
 #' @importFrom tibble tibble
@@ -188,10 +217,10 @@ extract_stats_aovlist <- function(x)
 
 #' @importFrom dplyr rowwise mutate_at
 #' @importFrom tibble tibble
-#' @importFrom purrr map map_chr
+#' @importFrom purrr map_chr
 #' @importFrom stringr str_extract
-anova_apa_afex <- function(x, effect, sph_corr, force_sph_corr, es, format,
-                           info, print)
+anova_apa_afex <- function(x, effect, sph_corr, force_sph_corr, es, es_ci,
+                           format, info, print)
 {
   info_msg <- ""
 
@@ -299,19 +328,26 @@ anova_apa_afex <- function(x, effect, sph_corr, force_sph_corr, es, format,
     }
   }
 
+  if (es_ci)
+  {
+    tbl$es_ci <- map_chr(tbl$effects, \(effect) petasq_ci(x, effect))
+  }
+
   # Reorder rows in tbl
   tbl <- reorder_anova_tbl(tbl)
 
   if (info && info_msg != "") message(info_msg)
 
-  anova_apa_print(tbl, effect, es, format, print)
+  anova_apa_print(tbl, effect = effect, es = es, es_ci = es_ci, format = format,
+                  print = print)
 }
 
 #' @importFrom dplyr left_join rowwise mutate_at
+#' @importFrom purrr map_chr
 #' @importFrom stringr str_extract
 #' @importFrom tibble tibble
-anova_apa_ezanova <- function(x, effect, sph_corr, force_sph_corr, es, format,
-                              info, print)
+anova_apa_ezanova <- function(x, effect, sph_corr, force_sph_corr, es, es_ci,
+                              format, info, print)
 {
   info_msg <- ""
 
@@ -415,31 +451,39 @@ anova_apa_ezanova <- function(x, effect, sph_corr, force_sph_corr, es, format,
     }
   }
 
+  if (es_ci)
+  {
+    tbl$es_ci <- map_chr(tbl$effects, \(effect) petasq_ci(x, effect))
+  }
+
   if (info && info_msg != "") message(info_msg)
 
-  anova_apa_print(tbl, effect, es, format, print)
+  anova_apa_print(tbl, effect = effect, es = es, es_ci = es_ci, format = format,
+                  print = print)
 }
 
 #' @importFrom purrr map_chr
 #' @importFrom rmarkdown render
 #' @importFrom tibble tibble
-anova_apa_print <- function(tbl, effect, es_name, format, print)
+anova_apa_print <- function(tbl, effect, es_name, es_ci, format, print)
 {
   # Output for default parameters
   if (format == "text" && print)
   {
-    anova_apa_print_default(tbl, effect, es_name)
+    anova_apa_print_default(tbl, effect = effect, es_name = es_name,
+                            es_ci = es_ci)
   }
   else if (format == "docx")
   {
-    anova_apa_print_docx(tbl, effect, es_name)
+    anova_apa_print_docx(tbl, effect = effect, es_name = es_name, es_ci = es_ci)
   }
   else
   {
     # Put the formatted string together
     text <- paste0(fmt_symb("F", format), "(", tbl$df_n, ", ", tbl$df_d, ") ",
                    tbl$statistic, ", ", fmt_symb("p", format), " ", tbl$p, ", ",
-                   fmt_symb(es_name, format), " ", tbl$es)
+                   fmt_symb(es_name, format), " ", tbl$es,
+                   if (es_ci) paste0(" ", tbl$es_ci))
 
     if (format == "latex")
     {
@@ -492,7 +536,7 @@ anova_apa_print <- function(tbl, effect, es_name, format, print)
 }
 
 #' @importFrom tibble tibble
-anova_apa_print_default <- function(tbl, effect, es_name)
+anova_apa_print_default <- function(tbl, effect, es_name, es_ci)
 {
   # Split test statistic and its sign, because the tabular output will be
   # aligned along the test statistic
@@ -505,7 +549,8 @@ anova_apa_print_default <- function(tbl, effect, es_name)
                  format(statistic, width = max(nchar(statistic)),
                         justify = "right"),
                  ", p ", tbl$p, ", ", fmt_symb(es_name, "text"), " ", tbl$es,
-                 " ", format(tbl$symb, width = 3))
+                 " ", if (es_ci) paste0(tbl$es_ci, " "),
+                 format(tbl$symb, width = 3))
   )
 
   if (is.null(effect))
@@ -524,7 +569,7 @@ anova_apa_print_default <- function(tbl, effect, es_name)
 }
 
 #' @importFrom rmarkdown render
-anova_apa_print_docx <- function(tbl, effect, es_name)
+anova_apa_print_docx <- function(tbl, effect, es_name, es_ci)
 {
   # Create temporary markdown file
   tmp <- tempfile("anova_apa", fileext = ".md")
@@ -532,7 +577,8 @@ anova_apa_print_docx <- function(tbl, effect, es_name)
   # Put the formatted string together
   out <- paste0(tbl$effects, " *F*(", tbl$df_n, ", ", tbl$df_d, ") ",
                 tbl$statistic, ", *p* ", tbl$p, ", ",
-                fmt_symb(es_name, "rmarkdown"), " ", tbl$es, "\n\n")
+                fmt_symb(es_name, "rmarkdown"), " ", tbl$es,
+                if (es_ci) paste0(" ", tbl$es_ci), "\n\n")
 
   if (is.null(effect))
   {
@@ -568,7 +614,8 @@ anova_apa_print_plotmath <- function(tbl, text, effect)
   fmt_plotmath(
     text[which(tbl$effects == effect)],
     "(\\([0-9]+\\.?[0-9]*, [0-9]+\\.?[0-9]*\\) [<=] [0-9]+\\.[0-9]{2}, )",
-    "( [<=>] \\.[0-9]{3}, )", "( [<=] -?[0-9]*\\.[0-9]{2}$)"
+    "( [<=>] \\.[0-9]{3}, )",
+    "( [<=] -?[0-9]*\\.[0-9]{2}( \\[.+\\])?$)"
   )
 }
 

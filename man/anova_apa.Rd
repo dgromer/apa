@@ -10,6 +10,7 @@ anova_apa(
   sph_corr = c("greenhouse-geisser", "gg", "huynh-feldt", "hf", "none"),
   force_sph_corr = FALSE,
   es = c("petasq", "pes", "getasq", "ges"),
+  es_ci = FALSE,
   format = c("text", "markdown", "rmarkdown", "html", "latex", "latex_math", "docx",
     "plotmath"),
   info = FALSE,
@@ -37,6 +38,10 @@ test of sphericity is (default is \code{FALSE}).}
 output, one of \code{"petasq"} (partial eta squared) or \code{"getasq"}
 (generalized eta squared) (you may also use the abbreviations \code{"pes"}
 or \code{"ges"}).}
+
+\item{es_ci}{Logical indicating whether to add the 90\% confidence interval
+for partial eta squared (experimental; default is \code{FALSE}). Currently
+not available for generalized eta squared.}
 
 \item{format}{Character string specifying the output format. One of
 \code{"text"}, \code{"markdown"}, \code{"rmarkdown"}, \code{html},
