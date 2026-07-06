@@ -1,5 +1,9 @@
 # apa 0.3.5.9000
 
+## New features
+
+* Add support for Quarto output.
+
 ## Bug fixes
 
 * Add missing support for calls to `aov()` to `apa()` function.

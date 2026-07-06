@@ -8,8 +8,9 @@
 #' @param es_ci Logical indicating whether to add the 95\% confidence interval
 #'   for Cohen's d (experimental; default is \code{FALSE}).
 #' @param format Character string specifying the output format. One of
-#'   \code{"text"}, \code{"markdown"}, \code{"rmarkdown"}, \code{html},
-#'   \code{"latex"}, \code{"latex_math"}, \code{"docx"} or \code{"plotmath"}.
+#'   \code{"text"}, \code{"markdown"}, \code{"quarto"}, \code{"rmarkdown"},
+#'   \code{html}, \code{"latex"}, \code{"latex_math"}, \code{"docx"} or
+#'   \code{"plotmath"}.
 #' @param info Logical indicating whether to print a message on the used test
 #'   (default is \code{FALSE})
 #' @param print Logical indicating whether to print the formatted output via
@@ -24,9 +25,9 @@
 #'
 #' @export
 t_apa <- function(x, es = c("cohens_d", "hedges_g", "glass_delta"),
-                  es_ci = FALSE, format = c("text", "markdown", "rmarkdown",
-                                            "html", "latex", "latex_math",
-                                            "docx", "plotmath"),
+                  es_ci = FALSE, format = c("text", "markdown", "quarto",
+                                            "rmarkdown", "html", "latex",
+                                            "latex_math", "docx", "plotmath"),
                   info = FALSE, print = TRUE)
 {
   format <- match.arg(format)

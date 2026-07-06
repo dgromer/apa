@@ -152,7 +152,7 @@ fmt_symb <- function(x, format)
            "spearman's"  = "*r_s*",
            "t"           = "*t*")
   }
-  else if (format == "rmarkdown")
+  else if (format %in% c("quarto", "rmarkdown"))
   {
     switch(x,
            "chisq"       = "$\\chi^2$",

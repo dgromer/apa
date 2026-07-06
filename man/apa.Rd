@@ -2,7 +2,7 @@
 % Please edit documentation in R/apa.R
 \name{apa}
 \alias{apa}
-\title{APA Formatting for RMarkdown Reports}
+\title{APA Formatting for Quarto and RMarkdown Reports}
 \usage{
 apa(x, effect = NULL, format = "rmarkdown", print = FALSE, ...)
 }
@@ -12,12 +12,11 @@ apa(x, effect = NULL, format = "rmarkdown", print = FALSE, ...)
 \code{cor.test}, \code{ez::ezANOVA} or \code{t_test}.}
 
 \item{effect}{(only applicable if \code{x} is an ANOVA) Character string
-indicating the name of the effect to display. If is \code{NULL}, all
-effects are reported (default).}
+indicating the name of the effect to display.}
 
 \item{format}{Character string specifying the output format. One of
-\code{"text"}, \code{"markdown"}, \code{"rmarkdown"}, \code{html},
-\code{"latex"} or \code{"docx"}.}
+\code{"text"}, \code{"markdown"}, \code{"quarto"}, \code{"rmarkdown"},
+\code{html}, \code{"latex"} or \code{"docx"}.}
 
 \item{print}{Logical indicating whether to return the result as an \R object
 (\code{FALSE}) or print using \code{cat} (\code{TRUE}).}
@@ -26,7 +25,7 @@ effects are reported (default).}
 }
 \description{
 A wrapper around the \code{*_apa} functions, providing a convenient way to
-use the formatters in inline code in RMarkdown documents.
+use the formatters in inline code in Quarto and RMarkdown documents.
 }
 \seealso{
 \link{anova_apa}, \link{chisq_apa},

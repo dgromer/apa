@@ -8,8 +8,8 @@ t_apa(
   x,
   es = c("cohens_d", "hedges_g", "glass_delta"),
   es_ci = FALSE,
-  format = c("text", "markdown", "rmarkdown", "html", "latex", "latex_math", "docx",
-    "plotmath"),
+  format = c("text", "markdown", "quarto", "rmarkdown", "html", "latex", "latex_math",
+    "docx", "plotmath"),
   info = FALSE,
   print = TRUE
 )
@@ -26,8 +26,9 @@ samples or one sample t-test (cohen's d is reported for these test).}
 for Cohen's d (experimental; default is \code{FALSE}).}
 
 \item{format}{Character string specifying the output format. One of
-\code{"text"}, \code{"markdown"}, \code{"rmarkdown"}, \code{html},
-\code{"latex"}, \code{"latex_math"}, \code{"docx"} or \code{"plotmath"}.}
+\code{"text"}, \code{"markdown"}, \code{"quarto"}, \code{"rmarkdown"},
+\code{html}, \code{"latex"}, \code{"latex_math"}, \code{"docx"} or
+\code{"plotmath"}.}
 
 \item{info}{Logical indicating whether to print a message on the used test
 (default is \code{FALSE})}

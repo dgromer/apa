@@ -3,8 +3,9 @@
 #' @param x A call to \code{chisq.test}
 #' @param print_n Logical indicating whether to show sample size in text
 #' @param format Character string specifying the output format. One of
-#'   \code{"text"}, \code{"markdown"}, \code{"rmarkdown"}, \code{html},
-#'   \code{"latex"}, \code{"latex_math"}, \code{"docx"} or \code{"plotmath"}.
+#'   \code{"text"}, \code{"markdown"}, \code{"quarto"}, \code{"rmarkdown"},
+#'   \code{html}, \code{"latex"}, \code{"latex_math"}, \code{"docx"} or
+#'   \code{"plotmath"}.
 #' @param info Logical indicating whether to print a message on the used test
 #'   (default is \code{FALSE})
 #' @param print Logical indicating whether to print the formatted output via
@@ -17,9 +18,10 @@
 #'
 #' @export
 chisq_apa <- function(x, print_n = FALSE, format = c("text", "markdown",
-                                                     "rmarkdown", "html",
-                                                     "latex", "latex_math",
-                                                     "docx", "plotmath"),
+                                                     "quarto", "rmarkdown",
+                                                     "html", "latex",
+                                                     "latex_math", "docx",
+                                                     "plotmath"),
                       info = FALSE, print = TRUE)
 {
   format <- match.arg(format)
