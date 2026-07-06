@@ -420,7 +420,7 @@ anova_apa_ezanova <- function(x, effect, sph_corr, force_sph_corr, es, format,
   anova_apa_print(tbl, effect, es, format, print)
 }
 
-#' @importFrom purrr map_chr
+#' @importFrom purrr map_chr map_dbl
 #' @importFrom rmarkdown render
 #' @importFrom tibble tibble
 anova_apa_print <- function(tbl, effect, es_name, format, print)
@@ -461,7 +461,7 @@ anova_apa_print <- function(tbl, effect, es_name, format, print)
       {
         # Align names of effects
         tbl$effects <- format(paste0(tbl$effects, ": "),
-                              width = max(map_chr(tbl$effects, nchar)))
+                              width = max(map_dbl(tbl$effects, nchar)))
 
         # Add line breaks
         text <- paste0(tbl$effects, text, "\n")
