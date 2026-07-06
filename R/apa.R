@@ -40,7 +40,8 @@ apa <- function(x, effect = NULL, format = "rmarkdown", print = FALSE, ...)
       stop("Unkown type passed to 'x'")
     }
   }
-  else if (inherits(x, "afex_aov") || (is.list(x) && names(x)[1] == "ANOVA"))
+  else if (inherits(x, c("aov", "lm")) || inherits(x, c("aovlist", "listof")) ||
+           inherits(x, "afex_aov") || (is.list(x) && names(x)[1] == "ANOVA"))
   {
     anova_apa(x, effect, format = format, print = print, ...)
   }

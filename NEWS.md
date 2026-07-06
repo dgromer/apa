@@ -1,3 +1,9 @@
+# apa 0.3.5.9000
+
+## Bug fixes
+
+* Add missing support for calls to `aov()` to `apa()` function.
+
 # apa 0.3.5
 
 ## Bug fixes
