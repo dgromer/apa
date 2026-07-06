@@ -179,6 +179,8 @@ petasq_ci_aov <- function(x, effect)
   petasq_ci_(f, df_n, df_d)
 }
 
+#' @importFrom purrr map
+#' @importFrom stringr str_trim
 petasq_ci_aovlist <- function(x, effect)
 {
   # Calculate ANOVA tables for each stratum
@@ -237,6 +239,8 @@ petasq_ci_afex <- function(x, effect, sph_corr, force_sph_corr)
   petasq_ci_(f, df_n, df_d)
 }
 
+
+#' @importFrom dplyr left_join
 petasq_ci_ezanova <- function(x, effect, sph_corr, force_sph_corr)
 {
   anova <- x$ANOVA
