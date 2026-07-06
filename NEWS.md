@@ -3,6 +3,8 @@
 ## Bug fixes
 
 * Add missing support for calls to `aov()` to `apa()` function.
+* Require argument `effect` in call to `apa()` when `x` is an ANOVA, as knitting
+  otherwise throws an error.
 
 # apa 0.3.5
 

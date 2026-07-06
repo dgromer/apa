@@ -7,8 +7,7 @@
 #'   \code{afex::aov_car}, \code{afex::aov_ez}, \code{chisq.test},
 #'   \code{cor.test}, \code{ez::ezANOVA} or \code{t_test}.
 #' @param effect (only applicable if \code{x} is an ANOVA) Character string
-#'   indicating the name of the effect to display. If is \code{NULL}, all
-#'   effects are reported (default).
+#'   indicating the name of the effect to display.
 #' @param format Character string specifying the output format. One of
 #'   \code{"text"}, \code{"markdown"}, \code{"rmarkdown"}, \code{html},
 #'   \code{"latex"} or \code{"docx"}.
@@ -43,6 +42,11 @@ apa <- function(x, effect = NULL, format = "rmarkdown", print = FALSE, ...)
   else if (inherits(x, c("aov", "lm")) || inherits(x, c("aovlist", "listof")) ||
            inherits(x, "afex_aov") || (is.list(x) && names(x)[1] == "ANOVA"))
   {
+    if (is.null(effect))
+    {
+      stop("For calls to ANOVA, an `effect` must be specified.")
+    }
+
     anova_apa(x, effect, format = format, print = print, ...)
   }
   else
