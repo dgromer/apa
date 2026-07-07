@@ -53,7 +53,7 @@ t_test.default <- function(x, y = NULL,
 }
 
 #' @rdname t_test
-#' @importFrom stats t.test
+#' @importFrom stats na.pass t.test
 #' @export
 t_test.formula <- function(formula, data, subset, na.action = na.pass, ...)
 {
