@@ -66,9 +66,11 @@ t_test.formula <- function(formula, data, subset, na.action = na.pass, ...)
   t <- eval(cl, parent.frame())
 
   # Apply the same logic as above in the call to `extract_data_formula` to get
-  # the original data.
+  # the original data. Supply the `extract_data_formula` function, as it is not
+  # exported and otherwise not found.
   cl[[1L]] <- quote(extract_data_formula)
-  t[["data"]] <- eval(cl, parent.frame())
+  t[["data"]] <- eval(cl, list(extract_data_formula = extract_data_formula),
+                      parent.frame())
 
   t
 }
