@@ -1,12 +1,21 @@
 context("t_test")
 
 test_that("t_test equals to t.test", {
-
-  x <- t.test(1:10, y = c(7:20))[]
+  x <- t.test(1:10, y = c(7:20))
 
   y <- t_test(1:10, y = c(7:20))
   # Remove 'data' entry
-  y <- y[!(names(y) == "data")]
+  y$data <- NULL
+
+  expect_equal(x, y)
+})
+
+test_that("t_test with subset equals to t.test", {
+  x <- t.test(extra ~ group, sleep, subset = as.numeric(ID) <= 5)
+
+  y <- t_test(extra ~ group, sleep, subset = as.numeric(ID) <= 5)
+  # Remove 'data' entry
+  y$data <- NULL
 
   expect_equal(x, y)
 })
