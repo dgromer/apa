@@ -19,7 +19,7 @@ t_test(x, ...)
   ...
 )
 
-\method{t_test}{formula}(formula, data, subset, na.action, ...)
+\method{t_test}{formula}(formula, data, subset, na.action = na.pass, ...)
 }
 \arguments{
 \item{x}{a (non-empty) numeric vector of data values.}

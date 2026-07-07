@@ -9,6 +9,7 @@
 * Add missing support for calls to `aov()` to `apa()` function.
 * Require argument `effect` in call to `apa()` when `x` is an ANOVA, as knitting
   otherwise throws an error.
+* Fix not working arguments `subset` and `na.action` in `t_test()`.
 
 # apa 0.3.5
 

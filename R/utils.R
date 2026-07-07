@@ -1,6 +1,6 @@
 #' @importFrom stats terms
 # Extract data from a data frame using a formula
-extract_data_formula <- function(formula, data, ...)
+extract_data_formula <- function(formula, data, subset, na.action, ...)
 {
   x <- list()
 

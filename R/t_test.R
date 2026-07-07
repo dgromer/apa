@@ -55,11 +55,20 @@ t_test.default <- function(x, y = NULL,
 #' @rdname t_test
 #' @importFrom stats t.test
 #' @export
-t_test.formula <- function(formula, data, subset, na.action, ...)
+t_test.formula <- function(formula, data, subset, na.action = na.pass, ...)
 {
-  t <- t.test(formula = formula, data = data, ...)
+  # Run the original t-test. Use `match.call` to get the unevaluated arguments
+  # because `t.test.formula` uses `match.call` itself and simply passing the
+  # arguments with t.test(formula = formula, data = data, subset = subset, etc.)
+  # would not allow `match.call` to catch the unevaluated expressions.
+  cl <- match.call(expand.dots = TRUE)
+  cl[[1L]] <- quote(stats::t.test)
+  t <- eval(cl, parent.frame())
 
-  t[["data"]] <- extract_data_formula(formula, data, ...)
+  # Apply the same logic as above in the call to `extract_data_formula` to get
+  # the original data.
+  cl[[1L]] <- quote(extract_data_formula)
+  t[["data"]] <- eval(cl, parent.frame())
 
   t
 }
