@@ -294,7 +294,11 @@ cohens_d_ <- function(m1 = NULL, m2 = NULL, sd1 = NULL, sd2 = NULL, n1 = NULL,
 
     if (paired || one_sample)
     {
-      d <- d * j(n)
+      d <- d * j(n - 1)
+    }
+    else if (any(sapply(list(n1, n2), is.null)))
+    {
+      d <- d * j(n - 2)
     }
     else
     {

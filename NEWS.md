@@ -14,6 +14,8 @@
   `cohens_d()`.
 * Fix formula interface for `cohens_d()` for within-subject data.
 * Fix check for `htest` type in `chisq_apa()`, `cor_apa()`, and  `t_apa()`.
+* Fix calculation of Cohen's d with Hedge's correction from independent samples
+  t-test.
 
 # apa 0.3.5
 
