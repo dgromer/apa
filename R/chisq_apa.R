@@ -27,7 +27,7 @@ chisq_apa <- function(x, print_n = FALSE, format = c("text", "markdown",
   format <- match.arg(format)
 
   # Make sure that 'x' was a call to `chisq.test`
-  if (!inherits(x, "htest") && !grepl("Chi-squared test", x$method))
+  if (!inherits(x, "htest") || !grepl("Chi-squared test", x$method))
   {
     stop("'x' must be a call to `chisq.test`")
   }

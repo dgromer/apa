@@ -35,7 +35,7 @@ cor_apa <- function(x, r_ci = FALSE,
   format <- match.arg(format)
 
   # Make sure that 'x' was a call to `cor.test`
-  if (!inherits(x, "htest") && !grepl("correlation", x$method))
+  if (!inherits(x, "htest") || !grepl("correlation", x$method))
   {
     stop("'x' must be a call to `cor.test`")
   }

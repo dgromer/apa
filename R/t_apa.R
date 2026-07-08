@@ -34,7 +34,7 @@ t_apa <- function(x, es = c("cohens_d", "hedges_g", "glass_delta"),
   es <- match.arg(es)
 
   # Make sure that 'x' was a call to `t_test` or `t.test`
-  if (!inherits(x, "htest") && !grepl("t-test", x$method))
+  if (!inherits(x, "htest") || !grepl("t-test", x$method))
   {
     stop("'x' must be a call to `t_test` or `t.test`")
   }
