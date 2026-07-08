@@ -20,7 +20,15 @@ test_that("t_test with subset equals to t.test", {
   expect_equal(x, y)
 })
 
-test_that("t_test returns input data", {
-  expect_equal(t_test(1:10, y = c(7:20))[["data"]],
+test_that("t_test.default returns input data in two-sample t-test", {
+  expect_equal(t_test(1:10, y = c(7:20))$data,
                list(x = 1:10, y = c(7:20)))
+})
+
+test_that("t_test.formula returns input data in two-sample t-test", {
+  expect_equal(t_test(mpg ~ am, data = mtcars)$data,
+               mtcars |>
+                 split(mtcars$am) |>
+                 lapply(\(x) x$mpg) |>
+                 setNames(c("x", "y")))
 })

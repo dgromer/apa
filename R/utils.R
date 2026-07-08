@@ -26,8 +26,8 @@ extract_data_formula <- function(formula, data, subset, na.action, ...)
       stop("grouping factor must have exactly 2 levels")
     DATA <- split(mf[[response]], g)
     # apa: set data for two sample t-test
-    x$x <- DATA[[1L]][complete.cases(DATA[[1L]], DATA[[2L]])]
-    x$y <- DATA[[2L]][complete.cases(DATA[[1L]], DATA[[2L]])]
+    x$x <- DATA[[1L]]
+    x$y <- DATA[[2L]]
   }
   else { # 1-sample and paired tests
     respVar <- mf[[response]]

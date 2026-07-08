@@ -10,6 +10,8 @@
 * Require argument `effect` in call to `apa()` when `x` is an ANOVA, as knitting
   otherwise throws an error.
 * Fix not working arguments `subset` and `na.action` in `t_test()`.
+* Fix error in extracting data via formula interface for `t_test()` and
+  `cohens_d()`.
 
 # apa 0.3.5
 
