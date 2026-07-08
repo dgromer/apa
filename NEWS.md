@@ -12,6 +12,7 @@
 * Fix not working arguments `subset` and `na.action` in `t_test()`.
 * Fix error in extracting data via formula interface for `t_test()` and
   `cohens_d()`.
+* Fix formula interface for `cohens_d()` for within-subject data.
 
 # apa 0.3.5
 

@@ -93,7 +93,7 @@ cohens_d(sleep, dv = extra, iv = group, paired = TRUE)
 cohens_d(sleep, dv = "extra", iv = "group", paired = TRUE)
 # formula interface
 sleep2 <- reshape(sleep, direction = "wide", idvar = "ID", timevar = "group")
-cohens_d(Pair(extra.1, extra.2) ~ 1, sleep2, paired = TRUE)
+cohens_d(Pair(extra.1, extra.2) ~ 1, sleep2)
 
 # Or pass a call to t_test or t.test
 cohens_d(t_test(Pair(extra.1, extra.2) ~ 1, sleep2))
